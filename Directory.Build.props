@@ -1,18 +1,37 @@
 <Project>
   <PropertyGroup>
     <AssemblyVersion>1.0.0</AssemblyVersion>
+    <Product>System.IO.Abstractions.Extensions</Product>
+    <Copyright>Copyright © Tatham Oddie - Luigi Grilli &amp; friends 2021</Copyright>
+    <Authors>Tatham Oddie - Luigi Grilli &amp; friends</Authors>
+    <SignAssembly Condition="'$(Configuration)' == 'Release'">True</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)StrongName.snk</AssemblyOriginatorKeyFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-  
-  <PropertyGroup>
-    <Authors></Authors>
-    <Product></Product>
-	  <PackageProjectUrl></PackageProjectUrl>
-    <RepositoryUrl></RepositoryUrl>
+    <LangVersion>9.0</LangVersion>
+    <PackageTags>testing</PackageTags>
+	<PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions.Extensions</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions.Extensions.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
-    <PackageLicenseExpression></PackageLicenseExpression>
-    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)key.snk</AssemblyOriginatorKeyFile>
-    <SignAssembly>true</SignAssembly>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <DefineConstants Condition="'$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'netcoreapp3.1' OR '$(TargetFramework)' == 'netstandard2.1'">$(DefineConstants);FEATURE_ASYNC_FILE;FEATURE_ENUMERATION_OPTIONS;FEATURE_ADVANCED_PATH_OPERATIONS;FEATURE_PATH_JOIN_WITH_SPAN</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)' == 'net5.0'">$(DefineConstants);FEATURE_FILE_MOVE_WITH_OVERWRITE</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)' == 'net5.0'">$(DefineConstants);FEATURE_SUPPORTED_OS_ATTRIBUTE</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)' == 'net5.0'">$(DefineConstants);FEATURE_FILE_SYSTEM_WATCHER_FILTERS</DefineConstants>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.IO.Abstractions" Version="13.*" />
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.220">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="SauceControl.InheritDoc" Version="1.3.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
 </Project>
