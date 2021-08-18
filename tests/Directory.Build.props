@@ -3,6 +3,11 @@
 
   <PropertyGroup>
     <IsPackable>false</IsPackable>
+    <!--  
+      Ensure that test logger is copied to output directory, see 
+      https://github.com/Tyrrrz/GitHubActionsTestLogger/issues/5 
+    -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
