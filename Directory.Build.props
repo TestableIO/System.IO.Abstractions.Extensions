@@ -1,6 +1,5 @@
 <Project>
   <PropertyGroup>
-    <AssemblyVersion>1.0.0</AssemblyVersion>
     <Product>System.IO.Abstractions.Extensions</Product>
     <Copyright>Copyright © Tatham Oddie - Luigi Grilli &amp; friends 2021</Copyright>
     <Authors>Tatham Oddie - Luigi Grilli &amp; friends</Authors>
@@ -12,7 +11,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <LangVersion>9.0</LangVersion>
     <PackageTags>testing</PackageTags>
-	<PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions.Extensions</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions.Extensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions.Extensions.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
@@ -24,7 +23,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.IO.Abstractions" Version="13.*" />
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.220">
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.231">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
