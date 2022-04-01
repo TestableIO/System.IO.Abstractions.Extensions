@@ -7,7 +7,7 @@
         /// </summary>
         /// <param name="fileSystem">FileSystem in use</param>
         /// <returns>An <see cref="IDirectoryInfo"/> for the current directory</returns>
-        public static IDirectoryInfo CurrentDirectory(this FileSystem fileSystem)
+        public static IDirectoryInfo CurrentDirectory(this IFileSystem fileSystem)
         {
             return fileSystem.DirectoryInfo.FromDirectoryName(fileSystem.Directory.GetCurrentDirectory());
         }
