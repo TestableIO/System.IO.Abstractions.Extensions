@@ -3,27 +3,27 @@
     public static class IDirectoryInfoExtensions
     {
         /// <summary>
-        ///     Get an <see cref="IDirectoryInfo" /> for the specified Directory at <paramref name="destDirectoryName" />.
+        ///     Copies this <see cref="IDirectoryInfo" /> instance and its contents to a new path.
         /// </summary>
         /// <param name="info"></param>
-        /// <param name="destDirectoryName">Destination Path for the directory to be copied to.</param>
+        /// <param name="destDirectoryName">The name and path to wich to copy this directory. The destination must not exist.</param>
+        /// <param name="recursive"><see langword="true"/> to copy this directory, its subfolders, and all files; otherwise <see langword="false"/>.</param>
         /// <returns>An <see cref="IDirectoryInfo" /> for the specified path.</returns>
         public static IDirectoryInfo CopyTo(this IDirectoryInfo info, string destDirectoryName, bool recursive = false)
         {
             var dest = info.FileSystem.DirectoryInfo.FromDirectoryName(destDirectoryName);
-
             return info.CopyTo(dest, recursive);
         }
 
         /// <summary>
-        ///     Get an <see cref="IDirectoryInfo" /> for the specified Directory at <paramref name="destDirectoryName" />.
+        ///     Copies this <see cref="IDirectoryInfo" /> instance and its contents to a new path.
         /// </summary>
         /// <param name="info"></param>
-        /// <param name="destDirectory">Destination Path for the directory to be copied to.</param>
+        /// <param name="destDirectory">The <see cref="IDirectoryInfo" /> to wich to copy this directory. The destination must not exist.</param>
+        /// <param name="recursive"><see langword="true"/> to copy this directory, its subfolders, and all files; otherwise <see langword="false"/>.</param>
         /// <returns>An <see cref="IDirectoryInfo" /> for the specified path.</returns>
         public static IDirectoryInfo CopyTo(this IDirectoryInfo info, IDirectoryInfo destDirectory, bool recursive = false)
         {
-            // Check if the source directory exists
             info.Refresh();
             if (!info.Exists)
             {
@@ -36,25 +36,19 @@
                 throw new IOException($"The directory '{destDirectory.FullName}' already exists.");
             }
 
-            // Cache directories before we start copying
-            var subDirectories = info.GetDirectories();
+            var fileSystem = info.FileSystem;
+            fileSystem.Directory.CreateDirectory(destDirectory.FullName);
 
-            // Create the destination directory
-            var fs = info.FileSystem;
-            fs.Directory.CreateDirectory(destDirectory.FullName);
-
-            // If recursive and copying subdirectories, recursively call this method
             if (recursive)
             {
-                foreach (var directoryInfo in subDirectories)
+                foreach (var directoryInfo in info.EnumerateDirectories())
                 {
-                    var newDestDirectory = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(destDirectory.FullName, directoryInfo.Name));
+                    var newDestDirectory = fileSystem.DirectoryInfo.FromDirectoryName(fileSystem.Path.Combine(destDirectory.FullName, directoryInfo.Name));
                     directoryInfo.CopyTo(newDestDirectory, true);
                 }
             }
 
-            // Get the files in the source directory and copy to the destination directory
-            foreach (var fileInfo in info.GetFiles())
+            foreach (var fileInfo in info.EnumerateFiles())
             {
                 string targetFilePath = Path.Combine(destDirectory.FullName, fileInfo.Name);
                 fileInfo.CopyTo(targetFilePath);

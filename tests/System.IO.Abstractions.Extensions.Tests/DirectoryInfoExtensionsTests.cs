@@ -32,12 +32,10 @@ namespace System.IO.Abstractions.Tests
             Assert.IsTrue(fs.Directory.Exists(newDest.FullName));
             Assert.IsFalse(fs.Directory.Exists(destSubDir.FullName));
 
-            //delete file
-            source.Delete(recursive: true);
-            dest.Delete(recursive: true);
+            //cleanup
+            workingDir.Delete(recursive: true);
 
-            Assert.IsFalse(fs.File.Exists(source.FullName));
-            Assert.IsFalse(fs.File.Exists(dest.FullName));
+            Assert.IsFalse(fs.File.Exists(workingDir.FullName));
         }
 
         [Test]
@@ -85,12 +83,10 @@ namespace System.IO.Abstractions.Tests
             Assert.IsFalse(fs.Directory.Exists(destSubDir.FullName));
             Assert.IsFalse(fs.File.Exists(destSubDirFile.FullName));
 
-            //delete file
-            source.Delete(recursive: true);
-            dest.Delete(recursive: true);
+            //cleanup
+            workingDir.Delete(recursive: true);
 
-            Assert.IsFalse(fs.File.Exists(source.FullName));
-            Assert.IsFalse(fs.File.Exists(dest.FullName));
+            Assert.IsFalse(fs.File.Exists(workingDir.FullName));
         }
 
         [Test]
@@ -120,12 +116,10 @@ namespace System.IO.Abstractions.Tests
             Assert.IsTrue(fs.Directory.Exists(newDest.FullName));
             Assert.IsTrue(fs.Directory.Exists(destSubDir.FullName));
 
-            //delete file
-            source.Delete(recursive: true);
-            dest.Delete(recursive: true);
+            //cleanup
+            workingDir.Delete(recursive: true);
 
-            Assert.IsFalse(fs.File.Exists(source.FullName));
-            Assert.IsFalse(fs.File.Exists(dest.FullName));
+            Assert.IsFalse(fs.File.Exists(workingDir.FullName));
         }
 
         [Test]
@@ -173,12 +167,10 @@ namespace System.IO.Abstractions.Tests
             Assert.IsTrue(fs.Directory.Exists(destSubDir.FullName));
             Assert.IsTrue(fs.File.Exists(destSubDirFile.FullName));
 
-            //delete file
-            source.Delete(recursive: true);
-            dest.Delete(recursive: true);
+            //cleanup
+            workingDir.Delete(recursive: true);
 
-            Assert.IsFalse(fs.File.Exists(source.FullName));
-            Assert.IsFalse(fs.File.Exists(dest.FullName));
+            Assert.IsFalse(fs.File.Exists(workingDir.FullName));
         }
 
         [Test]
@@ -223,13 +215,11 @@ namespace System.IO.Abstractions.Tests
 
             //act
             Assert.That(() => source.CopyTo(dest.FullName), Throws.Exception.TypeOf<IOException>().And.Message.EqualTo($"The directory '{dest.FullName}' already exists."));
+            
+            //cleanup
+            workingDir.Delete(recursive: true);
 
-            //delete file
-            source.Delete();
-            dest.Delete();
-
-            Assert.IsFalse(fs.File.Exists(source.FullName));
-            Assert.IsFalse(fs.File.Exists(dest.FullName));
+            Assert.IsFalse(fs.File.Exists(workingDir.FullName));
         }
 
         [Test]
