@@ -50,3 +50,18 @@ using (var stream = current.File("test.txt").Create())
 using (var stream = current.FileSystem.FileInfo.FromFileName(current.FileSystem.Path.Combine(current.FullName, "test.txt")).Create())
     stream.Dispose();
 ```
+
+## IDirectoryInfo.CopyTo extension
+```csharp
+var fs = new FileSystem();
+var current = fs.CurrentDirectory();
+
+//source
+var source =  fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(current.FullName, "SourceDir"));
+
+//destination
+var dest =  fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(current.FullName, "DestDir"));
+
+//copy
+source.CopyTo(dest, recursive: true);
+```
