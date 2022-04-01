@@ -57,13 +57,8 @@ namespace System.IO.Abstractions.Tests
             var sourceFile = fs.FileInfo.FromFileName(fs.Path.Combine(source.FullName, "file.txt"));
             var sourceSubDirFile = fs.FileInfo.FromFileName(fs.Path.Combine(sourceSubDir.FullName, "file.txt"));
 
-            using (var _ = sourceFile.Create())
-            {
-            }
-
-            using (var _ = sourceSubDirFile.Create())
-            {
-            }
+            sourceFile.Create().Dispose();
+            sourceSubDirFile.Create().Dispose();
 
             //make sure everything is set up as expected
             Assert.IsTrue(fs.Directory.Exists(source.FullName));
@@ -141,13 +136,8 @@ namespace System.IO.Abstractions.Tests
             var sourceFile = fs.FileInfo.FromFileName(fs.Path.Combine(source.FullName, "file.txt"));
             var sourceSubDirFile = fs.FileInfo.FromFileName(fs.Path.Combine(sourceSubDir.FullName, "file.txt"));
 
-            using (var _ = sourceFile.Create())
-            {
-            }
-
-            using (var _ = sourceSubDirFile.Create())
-            {
-            }
+            sourceFile.Create().Dispose();
+            sourceSubDirFile.Create().Dispose();
 
             //make sure everything is set up as expected
             Assert.IsTrue(fs.Directory.Exists(source.FullName));

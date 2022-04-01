@@ -7,9 +7,20 @@
         /// </summary>
         /// <param name="info"></param>
         /// <param name="destDirectoryName">The name and path to wich to copy this directory. The destination must not exist.</param>
-        /// <param name="recursive"><see langword="true"/> to copy this directory, its subfolders, and all files; otherwise <see langword="false"/>.</param>
         /// <returns>An <see cref="IDirectoryInfo" /> for the specified path.</returns>
-        public static IDirectoryInfo CopyTo(this IDirectoryInfo info, string destDirectoryName, bool recursive = false)
+        public static IDirectoryInfo CopyTo(this IDirectoryInfo info, string destDirectoryName)
+        {
+            return info.CopyTo(destDirectoryName, false);
+        }
+
+        /// <summary>
+        ///     Copies this <see cref="IDirectoryInfo" /> instance and its contents to a new path.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="destDirectoryName">The name and path to wich to copy this directory. The destination must not exist.</param>
+        /// <param name="recursive"><see langword="true" /> to copy this directory, its subfolders, and all files; otherwise <see langword="false" />.</param>
+        /// <returns>An <see cref="IDirectoryInfo" /> for the specified path.</returns>
+        public static IDirectoryInfo CopyTo(this IDirectoryInfo info, string destDirectoryName, bool recursive)
         {
             var dest = info.FileSystem.DirectoryInfo.FromDirectoryName(destDirectoryName);
             return info.CopyTo(dest, recursive);
@@ -20,9 +31,20 @@
         /// </summary>
         /// <param name="info"></param>
         /// <param name="destDirectory">The <see cref="IDirectoryInfo" /> to wich to copy this directory. The destination must not exist.</param>
-        /// <param name="recursive"><see langword="true"/> to copy this directory, its subfolders, and all files; otherwise <see langword="false"/>.</param>
         /// <returns>An <see cref="IDirectoryInfo" /> for the specified path.</returns>
-        public static IDirectoryInfo CopyTo(this IDirectoryInfo info, IDirectoryInfo destDirectory, bool recursive = false)
+        public static IDirectoryInfo CopyTo(this IDirectoryInfo info, IDirectoryInfo destDirectory)
+        {
+            return info.CopyTo(destDirectory, false);
+        }
+
+        /// <summary>
+        ///     Copies this <see cref="IDirectoryInfo" /> instance and its contents to a new path.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="destDirectory">The <see cref="IDirectoryInfo" /> to wich to copy this directory. The destination must not exist.</param>
+        /// <param name="recursive"><see langword="true" /> to copy this directory, its subfolders, and all files; otherwise <see langword="false" />.</param>
+        /// <returns>An <see cref="IDirectoryInfo" /> for the specified path.</returns>
+        public static IDirectoryInfo CopyTo(this IDirectoryInfo info, IDirectoryInfo destDirectory, bool recursive)
         {
             info.Refresh();
             if (!info.Exists)
