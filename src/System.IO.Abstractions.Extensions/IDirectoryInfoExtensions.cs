@@ -10,7 +10,7 @@
         /// <returns>An <see cref="IDirectoryInfo"/> for the specified sub-directory</returns>
         public static IDirectoryInfo SubDirectory(this IDirectoryInfo info, string name)
         {
-            return info.FileSystem.DirectoryInfo.FromDirectoryName(info.FileSystem.Path.Combine(info.FullName, name));
+            return info.FileSystem.DirectoryInfo.New(info.FileSystem.Path.Combine(info.FullName, name));
         }
 
         /// <summary>
@@ -21,7 +21,7 @@
         /// <returns>An <see cref="IFileInfo"/> for the specified file</returns>
         public static IFileInfo File(this IDirectoryInfo info, string name)
         {
-            return info.FileSystem.FileInfo.FromFileName(info.FileSystem.Path.Combine(info.FullName, name));
+            return info.FileSystem.FileInfo.New(info.FileSystem.Path.Combine(info.FullName, name));
         }
     }
 }
