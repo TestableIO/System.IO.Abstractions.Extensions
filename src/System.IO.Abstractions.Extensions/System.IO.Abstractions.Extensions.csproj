@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <PackageId>TestableIO.System.IO.Abstractions.Extensions</PackageId>
-    <TargetFrameworks>net6.0;net5.0;netstandard2.1;netstandard2.0;net461</TargetFrameworks>
-    <Description>Convenience functionalities on top of System.IO.Abstractions</Description>
-  </PropertyGroup>
+	<PropertyGroup>
+		<PackageId>TestableIO.System.IO.Abstractions.Extensions</PackageId>
+		<TargetFrameworks>net6.0;net5.0;netstandard2.1;netstandard2.0;net461</TargetFrameworks>
+		<Description>Convenience functionalities on top of System.IO.Abstractions</Description>
+	</PropertyGroup>
 
 </Project>
