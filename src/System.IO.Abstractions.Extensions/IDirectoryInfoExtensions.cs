@@ -13,6 +13,16 @@
             return info.FileSystem.DirectoryInfo.New(info.FileSystem.Path.Combine(info.FullName, name));
         }
 
+        public static IDirectoryInfo SubDirectory(this IDirectoryInfo info, params string[] paths)
+        {
+            return info.FileSystem.DirectoryInfo.FromDirectoryName(info.FileSystem.Path.Combine(info.FullName, paths));
+        }
+
+        public static IDirectoryInfo SubDirectory(this IDirectoryInfo info, IEnumerable<string> paths)
+        {
+            return info.FileSystem.DirectoryInfo.FromDirectoryName(info.FileSystem.Path.Combine(new[] { info.FullName }.Concat(paths)));
+        }
+
         /// <summary>
         /// Get an <see cref="IFileInfo"/> for the specified file <paramref name="name"/>
         /// </summary>
@@ -22,6 +32,16 @@
         public static IFileInfo File(this IDirectoryInfo info, string name)
         {
             return info.FileSystem.FileInfo.New(info.FileSystem.Path.Combine(info.FullName, name));
+        }
+
+        public static IFileInfo File(this IDirectoryInfo info, params string[] paths)
+        {
+            return info.FileSystem.FileInfo.FromFileName(info.FileSystem.Path.Combine(info.FullName, paths));
+        }
+
+        public static IFileInfo File(this IDirectoryInfo info, IEnumerable<string> paths)
+        {
+            return info.FileSystem.FileInfo.FromFileName(info.FileSystem.Path.Combine(new[] { info.FullName }.Concat(paths)));
         }
 
         /// <summary>
