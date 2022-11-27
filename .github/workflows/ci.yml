@@ -1,7 +1,9 @@
 name: Continuous Integration
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - 'feature/**'
   pull_request:
     branches: [main]
 jobs:
@@ -24,8 +26,6 @@ jobs:
             3.1.x
             5.0.x
             6.0.x
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v2
       - name: Run tests
         run: dotnet test --collect:"XPlat Code Coverage"  --logger "GitHubActions"
       - name: Upload coverage
