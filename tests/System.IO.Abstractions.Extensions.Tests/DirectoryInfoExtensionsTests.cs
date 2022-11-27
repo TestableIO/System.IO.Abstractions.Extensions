@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace System.IO.Abstractions.Extensions.Tests
 {
@@ -31,20 +32,47 @@ namespace System.IO.Abstractions.Extensions.Tests
         }
 
         [TestCase("test1", "test2")]
+        [TestCase("test1", "", "test2")]
         [TestCase("test1", null, "test2")]
         public void SubDirectoryWithParams_Extension_Test(params string[] subFolders)
         {
             //arrange
             var fs = new FileSystem();
-            var current = fs.DirectoryInfo.FromDirectoryName(fs.Directory.GetCurrentDirectory());
-            var guid = Guid.NewGuid().ToString();
-            var expectedPath = fs.Path.Combine(current.FullName, subFolders);
+            var current = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory());
+            var expectedPath = fs.Path.Combine(current.FullName, "test1", "test2");
 
             //make sure directory doesn't exists
             Assert.IsFalse(fs.Directory.Exists(expectedPath));
 
             //create directory
-            var created = current.SubDirectory(guid, "test1", "test2");
+            var created = current.SubDirectory(subFolders);
+            created.Create();
+
+            //assert it exists
+            Assert.IsTrue(fs.Directory.Exists(expectedPath));
+            Assert.AreEqual(expectedPath, created.FullName);
+
+            //delete directory
+            created.Delete();
+            Assert.IsFalse(fs.Directory.Exists(expectedPath));
+        }
+
+        [TestCase("test1", "test2")]
+        [TestCase("test1", "", "test2")]
+        [TestCase("test1", null, "test2")]
+        public void SubDirectoryWithIEnumerable_Extension_Test(params string[] subFolders)
+        {
+            //arrange
+            var fs = new FileSystem();
+            var current = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory());
+            var expectedPath = fs.Path.Combine(current.FullName, "test1", "test2");
+
+            //make sure directory doesn't exists
+            Assert.IsFalse(fs.Directory.Exists(expectedPath));
+
+            //create directory
+            var list = new List<string>(subFolders);
+            var created = current.SubDirectory(list);
             created.Create();
 
             //assert it exists

@@ -13,14 +13,27 @@
             return info.FileSystem.DirectoryInfo.New(info.FileSystem.Path.Combine(info.FullName, name));
         }
 
-        public static IDirectoryInfo SubDirectory(this IDirectoryInfo info, params string[] paths)
+        /// <summary>
+        /// Get an <see cref="IDirectoryInfo"/> for the specified sub-directories <paramref name="names"/>
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="names">Sub-directory names (ex. "test", "test2"). Empty or null names are automatically removed from this list</param>
+        /// <returns>An <see cref="IDirectoryInfo"/> for the specified sub-directory</returns>
+        public static IDirectoryInfo SubDirectory(this IDirectoryInfo info, params string[] names)
         {
-            return info.FileSystem.DirectoryInfo.FromDirectoryName(info.FileSystem.Path.Combine(info.FullName, paths));
+            return info.SubDirectory((IEnumerable<string>)names);
         }
 
-        public static IDirectoryInfo SubDirectory(this IDirectoryInfo info, IEnumerable<string> paths)
+        /// <summary>
+        /// Get an <see cref="IDirectoryInfo"/> for the specified sub-directories <paramref name="names"/>
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="names">Sub-directory names (ex. "test", "test2"). Empty or null names are automatically removed from this list</param>
+        /// <returns>An <see cref="IDirectoryInfo"/> for the specified sub-directory</returns>
+        public static IDirectoryInfo SubDirectory(this IDirectoryInfo info, IEnumerable<string> names)
         {
-            return info.FileSystem.DirectoryInfo.FromDirectoryName(info.FileSystem.Path.Combine(new[] { info.FullName }.Concat(paths)));
+            var paths = new[] { info.FullName }.Concat(names.Where(n => !String.IsNullOrEmpty(n))).ToArray();
+            return info.FileSystem.DirectoryInfo.New(info.FileSystem.Path.Combine(paths));
         }
 
         /// <summary>
