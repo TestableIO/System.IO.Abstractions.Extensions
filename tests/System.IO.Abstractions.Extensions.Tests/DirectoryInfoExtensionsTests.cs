@@ -10,7 +10,7 @@ namespace System.IO.Abstractions.Tests
         {
             //arrange
             var fs = new FileSystem();
-            var workingDir = fs.DirectoryInfo.FromDirectoryName(fs.Directory.GetCurrentDirectory()).CreateSubdirectory(Guid.NewGuid().ToString());
+            var workingDir = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory()).CreateSubdirectory(Guid.NewGuid().ToString());
 
             //create directories
             var source = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(workingDir.FullName, "SourceDir"));
@@ -217,7 +217,7 @@ namespace System.IO.Abstractions.Tests
         {
             //arrange
             var fs = new FileSystem();
-            var current = fs.DirectoryInfo.FromDirectoryName(fs.Directory.GetCurrentDirectory());
+            var current = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory());
             var guid = Guid.NewGuid().ToString();
             var expectedPath = fs.Path.Combine(current.FullName, guid);
 

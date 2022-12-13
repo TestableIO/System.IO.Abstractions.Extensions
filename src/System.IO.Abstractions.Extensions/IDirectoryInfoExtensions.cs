@@ -88,7 +88,7 @@
         /// <returns>An <see cref="IFileInfo" /> for the specified file</returns>
         public static IFileInfo File(this IDirectoryInfo info, string name)
         {
-            return info.FileSystem.FileInfo.FromFileName(info.FileSystem.Path.Combine(info.FullName, name));
+            return info.FileSystem.FileInfo.New(info.FileSystem.Path.Combine(info.FullName, name));
         }
 
         /// <summary>

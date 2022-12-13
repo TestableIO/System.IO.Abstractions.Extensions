@@ -9,7 +9,7 @@
         /// <returns>An <see cref="IDirectoryInfo"/> for the current directory</returns>
         public static IDirectoryInfo CurrentDirectory(this IFileSystem fileSystem)
         {
-            return fileSystem.DirectoryInfo.FromDirectoryName(fileSystem.Directory.GetCurrentDirectory());
+            return fileSystem.DirectoryInfo.New(fileSystem.Directory.GetCurrentDirectory());
         }
     }
 }
