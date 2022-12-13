@@ -13,9 +13,9 @@ namespace System.IO.Abstractions.Tests
             var workingDir = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory()).CreateSubdirectory(Guid.NewGuid().ToString());
 
             //create directories
-            var source = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(workingDir.FullName, "SourceDir"));
-            var sourceSubDir = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(workingDir.FullName, "SourceDir", "SubDir"));
-            var dest = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(workingDir.FullName, "DestDir"));
+            var source = fs.DirectoryInfo.New(fs.Path.Combine(workingDir.FullName, "SourceDir"));
+            var sourceSubDir = fs.DirectoryInfo.New(fs.Path.Combine(workingDir.FullName, "SourceDir", "SubDir"));
+            var dest = fs.DirectoryInfo.New(fs.Path.Combine(workingDir.FullName, "DestDir"));
 
             source.Create();
             sourceSubDir.Create();
@@ -28,7 +28,7 @@ namespace System.IO.Abstractions.Tests
             //act
             var newDest = source.CopyTo(dest.FullName);
 
-            var destSubDir = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(newDest.FullName, "SubDir"));
+            var destSubDir = fs.DirectoryInfo.New(fs.Path.Combine(newDest.FullName, "SubDir"));
             Assert.IsTrue(fs.Directory.Exists(newDest.FullName));
             Assert.IsFalse(fs.Directory.Exists(destSubDir.FullName));
 
@@ -43,19 +43,19 @@ namespace System.IO.Abstractions.Tests
         {
             //arrange
             var fs = new FileSystem();
-            var workingDir = fs.DirectoryInfo.FromDirectoryName(fs.Directory.GetCurrentDirectory()).CreateSubdirectory(Guid.NewGuid().ToString());
+            var workingDir = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory()).CreateSubdirectory(Guid.NewGuid().ToString());
 
             //create directories
-            var source = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(workingDir.FullName, "SourceDir"));
-            var sourceSubDir = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(workingDir.FullName, "SourceDir", "SubDir"));
-            var dest = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(workingDir.FullName, "DestDir"));
+            var source = fs.DirectoryInfo.New(fs.Path.Combine(workingDir.FullName, "SourceDir"));
+            var sourceSubDir = fs.DirectoryInfo.New(fs.Path.Combine(workingDir.FullName, "SourceDir", "SubDir"));
+            var dest = fs.DirectoryInfo.New(fs.Path.Combine(workingDir.FullName, "DestDir"));
 
             source.Create();
             sourceSubDir.Create();
 
             //create files
-            var sourceFile = fs.FileInfo.FromFileName(fs.Path.Combine(source.FullName, "file.txt"));
-            var sourceSubDirFile = fs.FileInfo.FromFileName(fs.Path.Combine(sourceSubDir.FullName, "file.txt"));
+            var sourceFile = fs.FileInfo.New(fs.Path.Combine(source.FullName, "file.txt"));
+            var sourceSubDirFile = fs.FileInfo.New(fs.Path.Combine(sourceSubDir.FullName, "file.txt"));
 
             sourceFile.Create().Dispose();
             sourceSubDirFile.Create().Dispose();
@@ -70,9 +70,9 @@ namespace System.IO.Abstractions.Tests
             //act
             var newDest = source.CopyTo(dest.FullName);
 
-            var destFile = fs.FileInfo.FromFileName(fs.Path.Combine(newDest.FullName, "file.txt"));
-            var destSubDir = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(newDest.FullName, "SubDir"));
-            var destSubDirFile = fs.FileInfo.FromFileName(fs.Path.Combine(destSubDir.FullName, "file.txt"));
+            var destFile = fs.FileInfo.New(fs.Path.Combine(newDest.FullName, "file.txt"));
+            var destSubDir = fs.DirectoryInfo.New(fs.Path.Combine(newDest.FullName, "SubDir"));
+            var destSubDirFile = fs.FileInfo.New(fs.Path.Combine(destSubDir.FullName, "file.txt"));
             Assert.IsTrue(fs.Directory.Exists(newDest.FullName));
             Assert.IsTrue(fs.File.Exists(destFile.FullName));
             Assert.IsFalse(fs.Directory.Exists(destSubDir.FullName));
@@ -89,12 +89,12 @@ namespace System.IO.Abstractions.Tests
         {
             //arrange
             var fs = new FileSystem();
-            var workingDir = fs.DirectoryInfo.FromDirectoryName(fs.Directory.GetCurrentDirectory()).CreateSubdirectory(Guid.NewGuid().ToString());
+            var workingDir = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory()).CreateSubdirectory(Guid.NewGuid().ToString());
 
             //create directories
-            var source = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(workingDir.FullName, "SourceDir"));
-            var sourceSubDir = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(source.FullName, "SubDir"));
-            var dest = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(workingDir.FullName, "DestDir"));
+            var source = fs.DirectoryInfo.New(fs.Path.Combine(workingDir.FullName, "SourceDir"));
+            var sourceSubDir = fs.DirectoryInfo.New(fs.Path.Combine(source.FullName, "SubDir"));
+            var dest = fs.DirectoryInfo.New(fs.Path.Combine(workingDir.FullName, "DestDir"));
 
             source.Create();
             sourceSubDir.Create();
@@ -107,7 +107,7 @@ namespace System.IO.Abstractions.Tests
             //act
             var newDest = source.CopyTo(dest.FullName, recursive: true);
 
-            var destSubDir = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(newDest.FullName, "SubDir"));
+            var destSubDir = fs.DirectoryInfo.New(fs.Path.Combine(newDest.FullName, "SubDir"));
             Assert.IsTrue(fs.Directory.Exists(newDest.FullName));
             Assert.IsTrue(fs.Directory.Exists(destSubDir.FullName));
 
@@ -122,19 +122,19 @@ namespace System.IO.Abstractions.Tests
         {
             //arrange
             var fs = new FileSystem();
-            var workingDir = fs.DirectoryInfo.FromDirectoryName(fs.Directory.GetCurrentDirectory()).CreateSubdirectory(Guid.NewGuid().ToString());
+            var workingDir = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory()).CreateSubdirectory(Guid.NewGuid().ToString());
 
             //create directories
-            var source = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(workingDir.FullName, "SourceDir"));
-            var sourceSubDir = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(source.FullName, "SubDir"));
-            var dest = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(workingDir.FullName, "DestDir"));
+            var source = fs.DirectoryInfo.New(fs.Path.Combine(workingDir.FullName, "SourceDir"));
+            var sourceSubDir = fs.DirectoryInfo.New(fs.Path.Combine(source.FullName, "SubDir"));
+            var dest = fs.DirectoryInfo.New(fs.Path.Combine(workingDir.FullName, "DestDir"));
 
             source.Create();
             sourceSubDir.Create();
 
             //create files
-            var sourceFile = fs.FileInfo.FromFileName(fs.Path.Combine(source.FullName, "file.txt"));
-            var sourceSubDirFile = fs.FileInfo.FromFileName(fs.Path.Combine(sourceSubDir.FullName, "file.txt"));
+            var sourceFile = fs.FileInfo.New(fs.Path.Combine(source.FullName, "file.txt"));
+            var sourceSubDirFile = fs.FileInfo.New(fs.Path.Combine(sourceSubDir.FullName, "file.txt"));
 
             sourceFile.Create().Dispose();
             sourceSubDirFile.Create().Dispose();
@@ -149,9 +149,9 @@ namespace System.IO.Abstractions.Tests
             //act
             var newDest = source.CopyTo(dest.FullName, recursive: true);
 
-            var destFile = fs.FileInfo.FromFileName(fs.Path.Combine(newDest.FullName, "file.txt"));
-            var destSubDir = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(newDest.FullName, "SubDir"));
-            var destSubDirFile = fs.FileInfo.FromFileName(fs.Path.Combine(destSubDir.FullName, "file.txt"));
+            var destFile = fs.FileInfo.New(fs.Path.Combine(newDest.FullName, "file.txt"));
+            var destSubDir = fs.DirectoryInfo.New(fs.Path.Combine(newDest.FullName, "SubDir"));
+            var destSubDirFile = fs.FileInfo.New(fs.Path.Combine(destSubDir.FullName, "file.txt"));
             Assert.IsTrue(fs.Directory.Exists(newDest.FullName));
             Assert.IsTrue(fs.File.Exists(destFile.FullName));
             Assert.IsTrue(fs.Directory.Exists(destSubDir.FullName));
@@ -168,11 +168,11 @@ namespace System.IO.Abstractions.Tests
         {
             //arrange
             var fs = new FileSystem();
-            var workingDir = fs.DirectoryInfo.FromDirectoryName(fs.Directory.GetCurrentDirectory()).CreateSubdirectory(Guid.NewGuid().ToString());
+            var workingDir = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory()).CreateSubdirectory(Guid.NewGuid().ToString());
 
             //create directories
-            var source = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(workingDir.FullName, "SourceDir"));
-            var dest = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(workingDir.FullName, "DestDir"));
+            var source = fs.DirectoryInfo.New(fs.Path.Combine(workingDir.FullName, "SourceDir"));
+            var dest = fs.DirectoryInfo.New(fs.Path.Combine(workingDir.FullName, "DestDir"));
 
             //make sure everything is set up as expected
             Assert.IsFalse(fs.Directory.Exists(source.FullName));
@@ -190,11 +190,11 @@ namespace System.IO.Abstractions.Tests
         {
             //arrange
             var fs = new FileSystem();
-            var workingDir = fs.DirectoryInfo.FromDirectoryName(fs.Directory.GetCurrentDirectory()).CreateSubdirectory(Guid.NewGuid().ToString());
+            var workingDir = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory()).CreateSubdirectory(Guid.NewGuid().ToString());
 
             //create directories
-            var source = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(workingDir.FullName, "SourceDir"));
-            var dest = fs.DirectoryInfo.FromDirectoryName(fs.Path.Combine(workingDir.FullName, "DestDir"));
+            var source = fs.DirectoryInfo.New(fs.Path.Combine(workingDir.FullName, "SourceDir"));
+            var dest = fs.DirectoryInfo.New(fs.Path.Combine(workingDir.FullName, "DestDir"));
 
             source.Create();
             dest.Create();
@@ -245,7 +245,7 @@ namespace System.IO.Abstractions.Tests
         {
             //arrange
             var fs = new FileSystem();
-            var current = fs.DirectoryInfo.FromDirectoryName(fs.Directory.GetCurrentDirectory());
+            var current = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory());
             var guid = Guid.NewGuid().ToString();
             var expectedPath = fs.Path.Combine(current.FullName, guid);
 

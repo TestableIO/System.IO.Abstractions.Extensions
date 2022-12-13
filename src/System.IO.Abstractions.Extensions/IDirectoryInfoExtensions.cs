@@ -22,7 +22,7 @@
         /// <returns>An <see cref="IDirectoryInfo" /> for the specified path.</returns>
         public static IDirectoryInfo CopyTo(this IDirectoryInfo info, string destDirectoryName, bool recursive)
         {
-            var dest = info.FileSystem.DirectoryInfo.FromDirectoryName(destDirectoryName);
+            var dest = info.FileSystem.DirectoryInfo.New(destDirectoryName);
             return info.CopyTo(dest, recursive);
         }
 
@@ -65,7 +65,7 @@
             {
                 foreach (var directoryInfo in info.EnumerateDirectories())
                 {
-                    var newDestDirectory = fileSystem.DirectoryInfo.FromDirectoryName(fileSystem.Path.Combine(destDirectory.FullName, directoryInfo.Name));
+                    var newDestDirectory = fileSystem.DirectoryInfo.New(fileSystem.Path.Combine(destDirectory.FullName, directoryInfo.Name));
                     directoryInfo.CopyTo(newDestDirectory, true);
                 }
             }
@@ -99,7 +99,7 @@
         /// <returns>An <see cref="IDirectoryInfo" /> for the specified sub-directory</returns>
         public static IDirectoryInfo SubDirectory(this IDirectoryInfo info, string name)
         {
-            return info.FileSystem.DirectoryInfo.FromDirectoryName(info.FileSystem.Path.Combine(info.FullName, name));
+            return info.FileSystem.DirectoryInfo.New(info.FileSystem.Path.Combine(info.FullName, name));
         }
     }
 }
