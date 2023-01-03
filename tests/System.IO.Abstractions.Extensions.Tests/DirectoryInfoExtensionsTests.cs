@@ -6,6 +6,59 @@ namespace System.IO.Abstractions.Tests
     public class DirectoryInfoExtensionsTests
     {
         [Test]
+        public void SubDirectory_Extension_Test()
+        {
+            //arrange
+            var fs = new FileSystem();
+            var current = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory());
+            var guid = Guid.NewGuid().ToString();
+            var expectedPath = fs.Path.Combine(current.FullName, guid);
+
+            //make sure directory doesn't exists
+            Assert.IsFalse(fs.Directory.Exists(expectedPath));
+
+            //create directory
+            var created = current.SubDirectory(guid);
+            created.Create();
+
+            //assert it exists
+            Assert.IsTrue(fs.Directory.Exists(expectedPath));
+            Assert.AreEqual(expectedPath, created.FullName);
+
+            //delete directory
+            created.Delete();
+            Assert.IsFalse(fs.Directory.Exists(expectedPath));
+        }
+
+        [Test]
+        public void File_Extension_Test()
+        {
+            //arrange
+            var fs = new FileSystem();
+            var current = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory());
+            var guid = Guid.NewGuid().ToString();
+            var expectedPath = fs.Path.Combine(current.FullName, guid);
+
+            //make sure file doesn't exists
+            Assert.IsFalse(fs.File.Exists(expectedPath));
+
+            //create file
+            var created = current.File(guid);
+            using (var stream = created.Create())
+            {
+                stream.Dispose();
+            }
+
+            //assert it exists
+            Assert.IsTrue(fs.File.Exists(expectedPath));
+            Assert.AreEqual(expectedPath, created.FullName);
+
+            //delete file
+            created.Delete();
+            Assert.IsFalse(fs.File.Exists(expectedPath));
+        }
+
+        [Test]
         public void CopyTo_NonRecursiveWithSubfolder_DoesNotCopySubfolder()
         {
             //arrange
@@ -186,7 +239,7 @@ namespace System.IO.Abstractions.Tests
         }
 
         [Test]
-        public void CopyTo_TargetDirExists_ThrowsIOException()
+        public void CopyTo_TargetDirAndParentDoesNotExist_CreatesTargetDirectoryHierarchy()
         {
             //arrange
             var fs = new FileSystem();
@@ -194,75 +247,24 @@ namespace System.IO.Abstractions.Tests
 
             //create directories
             var source = fs.DirectoryInfo.New(fs.Path.Combine(workingDir.FullName, "SourceDir"));
-            var dest = fs.DirectoryInfo.New(fs.Path.Combine(workingDir.FullName, "DestDir"));
+            var dest = fs.DirectoryInfo.New(fs.Path.Combine(workingDir.FullName, "ParentDir", "DestDir"));
 
             source.Create();
-            dest.Create();
 
             //make sure everything is set up as expected
             Assert.IsTrue(fs.Directory.Exists(source.FullName));
-            Assert.IsTrue(fs.Directory.Exists(dest.FullName));
+            Assert.IsFalse(fs.Directory.Exists(dest.FullName));
 
             //act
-            Assert.That(() => source.CopyTo(dest.FullName), Throws.Exception.TypeOf<IOException>().And.Message.EqualTo($"The directory '{dest.FullName}' already exists."));
-            
+            source.CopyTo(dest.FullName);
+
+            //assert
+            Assert.IsTrue(fs.Directory.Exists(dest.FullName));
+
             //cleanup
             workingDir.Delete(recursive: true);
 
             Assert.IsFalse(fs.File.Exists(workingDir.FullName));
-        }
-
-        [Test]
-        public void File_Extension_Test()
-        {
-            //arrange
-            var fs = new FileSystem();
-            var current = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory());
-            var guid = Guid.NewGuid().ToString();
-            var expectedPath = fs.Path.Combine(current.FullName, guid);
-
-            //make sure file doesn't exists
-            Assert.IsFalse(fs.File.Exists(expectedPath));
-
-            //create file
-            var created = current.File(guid);
-            using (var stream = created.Create())
-            {
-                stream.Dispose();
-            }
-
-            //assert it exists
-            Assert.IsTrue(fs.File.Exists(expectedPath));
-            Assert.AreEqual(expectedPath, created.FullName);
-
-            //delete file
-            created.Delete();
-            Assert.IsFalse(fs.File.Exists(expectedPath));
-        }
-
-        [Test]
-        public void SubDirectory_Extension_Test()
-        {
-            //arrange
-            var fs = new FileSystem();
-            var current = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory());
-            var guid = Guid.NewGuid().ToString();
-            var expectedPath = fs.Path.Combine(current.FullName, guid);
-
-            //make sure directory doesn't exists
-            Assert.IsFalse(fs.Directory.Exists(expectedPath));
-
-            //create directory
-            var created = current.SubDirectory(guid);
-            created.Create();
-
-            //assert it exists
-            Assert.IsTrue(fs.Directory.Exists(expectedPath));
-            Assert.AreEqual(expectedPath, created.FullName);
-
-            //delete directory
-            created.Delete();
-            Assert.IsFalse(fs.Directory.Exists(expectedPath));
         }
     }
 }
