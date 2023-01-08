@@ -22,7 +22,7 @@ var fs = new FileSystem();
 var current = fs.CurrentDirectory();
 
 //without extension
-var current =  fs.DirectoryInfo.FromDirectoryName(fs.Directory.GetCurrentDirectory());
+var current =  fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory());
 ```
 
 ## SubDirectory extension
@@ -34,7 +34,7 @@ var current = new FileSystem().CurrentDirectory();
 current.SubDirectory("temp").Create();
 
 //create a "temp" subdirectory without extension
-current.FileSystem.DirectoryInfo.FromDirectoryName(current.FileSystem.Path.Combine(current.FullName, "temp")).Create();
+current.FileSystem.DirectoryInfo.New(current.FileSystem.Path.Combine(current.FullName, "temp")).Create();
 ```
 
 ## File extension
@@ -47,6 +47,21 @@ using (var stream = current.File("test.txt").Create())
     stream.Dispose();
 
 //create a "test.txt" file without extension
-using (var stream = current.FileSystem.FileInfo.FromFileName(current.FileSystem.Path.Combine(current.FullName, "test.txt")).Create())
+using (var stream = current.FileSystem.FileInfo.New(current.FileSystem.Path.Combine(current.FullName, "test.txt")).Create())
     stream.Dispose();
+```
+
+## IDirectoryInfo.CopyTo extension
+```csharp
+var fs = new FileSystem();
+var current = fs.CurrentDirectory();
+
+//source
+var source =  fs.DirectoryInfo.New(fs.Path.Combine(current.FullName, "SourceDir"));
+
+//destination
+var dest =  fs.DirectoryInfo.New(fs.Path.Combine(current.FullName, "DestDir"));
+
+//copy
+source.CopyTo(dest, recursive: true);
 ```
