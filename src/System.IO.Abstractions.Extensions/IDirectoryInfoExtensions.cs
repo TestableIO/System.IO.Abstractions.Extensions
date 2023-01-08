@@ -14,6 +14,17 @@
         }
 
         /// <summary>
+        /// Get full path for the specified file <paramref name="name"/>
+        /// </summary>
+        /// <param name="info">Containing directory</param>
+        /// <param name="name">File name (ex. "test.txt")</param>
+        /// <returns>An <see cref="IFileInfo"/> for the specified file</returns>
+        public static string FilePath(this IDirectoryInfo info, string name)
+        {
+            return info.FileSystem.Path.Combine(info.FullName, name);
+        }
+
+        /// <summary>
         /// Get an <see cref="IFileInfo"/> for the specified file <paramref name="name"/>
         /// </summary>
         /// <param name="info"></param>
@@ -21,83 +32,47 @@
         /// <returns>An <see cref="IFileInfo"/> for the specified file</returns>
         public static IFileInfo File(this IDirectoryInfo info, string name)
         {
-            return info.FileSystem.FileInfo.New(info.FileSystem.Path.Combine(info.FullName, name));
+            return info.FileSystem.FileInfo.New(info.FilePath(name));
         }
 
         /// <summary>
-        /// Copies this <see cref="IDirectoryInfo"/> instance and its contents to a new path.
+        /// Copies the <paramref name="source"/> directory to the specified <paramref name="destinationPath"/>
         /// </summary>
-        /// <param name="info"></param>
-        /// <param name="destDirectoryName">The name and path to wich to copy this directory. The destination must not exist.</param>
-        /// <returns>An <see cref="IDirectoryInfo"/> for the specified path.</returns>
-        public static IDirectoryInfo CopyTo(this IDirectoryInfo info, string destDirectoryName)
-        {
-            return info.CopyTo(destDirectoryName, false);
-        }
-
-        /// <summary>
-        /// Copies this <see cref="IDirectoryInfo"/> instance and its contents to a new path.
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="destDirectoryName">The name and path to wich to copy this directory. The destination must not exist.</param>
+        /// <param name="source">Source directory to copy the files from</param>
+        /// <param name="destinationPath">The full path to wich to copy this directory to. If the <paramref name="destinationPath"/> doesn't exist, it will be created</param>
         /// <param name="recursive"><see langword="true"/> to copy this directory, its subfolders, and all files; otherwise <see langword="false"/>.</param>
-        /// <returns>An <see cref="IDirectoryInfo"/> for the specified path.</returns>
-        public static IDirectoryInfo CopyTo(this IDirectoryInfo info, string destDirectoryName, bool recursive)
+        /// <returns>An <see cref="IDirectoryInfo"/> for the specified <paramref name="destinationPath"/></returns>
+        public static IDirectoryInfo CopyTo(this IDirectoryInfo source, string destinationPath, bool recursive = false, bool overwrite = false)
         {
-            var dest = info.FileSystem.DirectoryInfo.New(destDirectoryName);
-            return info.CopyTo(dest, recursive);
+            var dest = source.FileSystem.DirectoryInfo.New(destinationPath);
+            return source.CopyTo(dest, recursive, overwrite);
         }
 
         /// <summary>
-        /// Copies this <see cref="IDirectoryInfo"/> instance and its contents to a new path.
+        /// Copies the <paramref name="source"/> directory to the specified <paramref name="destination"/> directory
         /// </summary>
-        /// <param name="info"></param>
-        /// <param name="destDirectory">The <see cref="IDirectoryInfo"/> to wich to copy this directory. The destination must not exist.</param>
-        /// <returns>An <see cref="IDirectoryInfo"/> for the specified path.</returns>
-        public static IDirectoryInfo CopyTo(this IDirectoryInfo info, IDirectoryInfo destDirectory)
+        /// <param name="source">Source directory to copy the files from</param>
+        /// <param name="destination">The <see cref="IDirectoryInfo"/> to wich to copy the <paramref name="source"/> directory to. If the <paramref name="destination"/> directory doesn't exist, it will be created</param>
+        /// <param name="recursive"><see langword="true"/> to copy this directory, its subfolders, and all files; otherwise <see langword="false"/> to copy only the files at the first level</param>
+        /// <param name="overwrite"><see langword="true"/> to overwrite the files in the destination; otherwise <see langword="false"/> to throw an <see cref="IOException"/> if the file already exists in the destination.</param>
+        /// <returns>Returns the <paramref name="destination"/> directory reference to allow for chaining methods</returns>
+        public static IDirectoryInfo CopyTo(this IDirectoryInfo source, IDirectoryInfo destination, bool recursive = false, bool overwrite = false)
         {
-            return info.CopyTo(destDirectory, false);
-        }
+            if (!source.Exists)
+                throw new DirectoryNotFoundException($"Source directory not found: '{source.FullName}'");
 
-        /// <summary>
-        /// Copies this <see cref="IDirectoryInfo"/> instance and its contents to a new path.
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="destDirectory">The <see cref="IDirectoryInfo"/> to wich to copy this directory. The destination must not exist.</param>
-        /// <param name="recursive"><see langword="true"/> to copy this directory, its subfolders, and all files; otherwise <see langword="false"/>.</param>
-        /// <returns>An <see cref="IDirectoryInfo"/> for the specified path.</returns>
-        public static IDirectoryInfo CopyTo(this IDirectoryInfo info, IDirectoryInfo destDirectory, bool recursive)
-        {
-            info.Refresh();
-            if (!info.Exists)
-            {
-                throw new DirectoryNotFoundException($"Source directory not found: '{info.FullName}'");
-            }
+            destination.Create();
 
-            destDirectory.Refresh();
-            if (!destDirectory.Exists)
-            {
-                destDirectory.Create();
-            }
-
-            var fileSystem = info.FileSystem;
             if (recursive)
             {
-                foreach (var directoryInfo in info.EnumerateDirectories())
-                {
-                    var newDestDirectory = fileSystem.DirectoryInfo.New(fileSystem.Path.Combine(destDirectory.FullName, directoryInfo.Name));
-                    directoryInfo.CopyTo(newDestDirectory, true);
-                }
+                foreach (var sourceDir in source.EnumerateDirectories())
+                    sourceDir.CopyTo(destination.SubDirectory(sourceDir.Name), recursive, overwrite);
             }
 
-            foreach (var fileInfo in info.EnumerateFiles())
-            {
-                var targetFilePath = fileSystem.Path.Combine(destDirectory.FullName, fileInfo.Name);
-                fileInfo.CopyTo(targetFilePath);
-            }
+            foreach (var srcFile in source.EnumerateFiles())
+                srcFile.CopyTo(destination.FilePath(srcFile.Name), overwrite);
 
-            destDirectory.Refresh();
-            return destDirectory;
+            return destination;
         }
     }
 }

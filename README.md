@@ -57,10 +57,11 @@ var fs = new FileSystem();
 var current = fs.CurrentDirectory();
 
 //source
-var source =  fs.DirectoryInfo.New(fs.Path.Combine(current.FullName, "SourceDir"));
+var source =  current.SubDirectory("source");
+source.Create(); //make sure the source directory exists
 
 //destination
-var dest =  fs.DirectoryInfo.New(fs.Path.Combine(current.FullName, "DestDir"));
+var dest = current.SubDirectory("destination");
 
 //copy
 source.CopyTo(dest, recursive: true);
