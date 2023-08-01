@@ -50,3 +50,30 @@ using (var stream = current.File("test.txt").Create())
 using (var stream = current.FileSystem.FileInfo.FromFileName(current.FileSystem.Path.Combine(current.FullName, "test.txt")).Create())
     stream.Dispose();
 ```
+
+## CreateDisposableDirectory / CreateDisposableFile extension
+
+```csharp
+var fs = new FileSystem();
+
+//with extension
+using (fs.CreateDisposableDirectory(out IDirectoryInfo dir))
+{
+    Console.WriteLine($"This directory will be deleted when control leaves the using block: '{dir.FullName}'");
+}
+
+//without extension
+var temp = fileSystem.Path.GetTempPath();
+var fileName = fileSystem.Path.GetRandomFileName();
+var path = fileSystem.Path.Combine(temp, fileName);
+
+try
+{
+    IDirectoryInfo dir = fs.Directory.CreateDirectory(path);
+    Console.WriteLine($"This directory will be deleted in the finally block: '{dir.FullName}'");
+}
+finally
+{
+    fs.Directory.Delete(path, recursive: true);
+}
+```
