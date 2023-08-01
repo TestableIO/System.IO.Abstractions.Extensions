@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System.Runtime;
 
 namespace System.IO.Abstractions.Extensions.Tests
 {
@@ -22,6 +23,7 @@ namespace System.IO.Abstractions.Extensions.Tests
 
             // Assert file exists
             Assert.IsTrue(fs.File.Exists(path), "File exists");
+            Assert.IsTrue(fileInfo.Exists, "IFileInfo.Exists should be true");
 
             // Act
             var disposableFile = new DisposableFile(fileInfo);
@@ -29,6 +31,7 @@ namespace System.IO.Abstractions.Extensions.Tests
 
             // Assert directory is deleted
             Assert.IsFalse(fs.File.Exists(path), "File does not exist");
+            Assert.IsFalse(fileInfo.Exists, "IFileInfo.Exists should be false");
 
             // Assert a second dispose does not throw
             Assert.DoesNotThrow(() => disposableFile.Dispose());

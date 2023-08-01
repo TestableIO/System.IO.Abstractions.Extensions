@@ -39,6 +39,10 @@
                 if (disposing)
                 {
                     directoryInfo.Delete(recursive: true);
+
+                    // Do an attribute refresh so that the object we returned to the
+                    // caller has up-to-date properties (like Exists).
+                    directoryInfo.Refresh();
                 }
 
                 isDisposed = true;

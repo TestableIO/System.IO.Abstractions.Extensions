@@ -24,6 +24,7 @@ namespace System.IO.Abstractions.Extensions.Tests
 
             // Assert directory exists
             Assert.IsTrue(fs.Directory.Exists(path), "Directory should exist");
+            Assert.IsTrue(dirInfo.Exists, "IDirectoryInfo.Exists should be true");
 
             // Act
             var disposableDirectory = new DisposableDirectory(dirInfo);
@@ -31,6 +32,7 @@ namespace System.IO.Abstractions.Extensions.Tests
 
             // Assert directory is deleted
             Assert.IsFalse(fs.Directory.Exists(path), "Directory should not exist");
+            Assert.IsFalse(dirInfo.Exists, "IDirectoryInfo.Exists should be false");
 
             // Assert a second dispose does not throw
             Assert.DoesNotThrow(() => disposableDirectory.Dispose());

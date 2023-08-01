@@ -39,6 +39,10 @@
                 if (disposing)
                 {
                     fileInfo.Delete();
+                    
+                    // Do an attribute refresh so that the object we returned to the
+                    // caller has up-to-date properties (like Exists).
+                    fileInfo.Refresh();
                 }
 
                 isDisposed = true;
