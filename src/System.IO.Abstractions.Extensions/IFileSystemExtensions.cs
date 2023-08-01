@@ -27,11 +27,7 @@
         /// </returns>
         public static IDisposable CreateDisposableDirectory(this IFileSystem fileSystem, out IDirectoryInfo directoryInfo)
         {
-            var temp = fileSystem.Path.GetTempPath();
-            var fileName = fileSystem.Path.GetRandomFileName();
-            var path = fileSystem.Path.Combine(temp, fileName);
-
-            return fileSystem.CreateDisposableDirectory(path, out directoryInfo);
+            return fileSystem.CreateDisposableDirectory(fileSystem.GetRandomTempPath(), out directoryInfo);
         }
 
         /// <inheritdoc cref="CreateDisposableDirectory(IFileSystem, out IDirectoryInfo)"/>
@@ -74,11 +70,7 @@
         /// </returns>
         public static IDisposable CreateDisposableFile(this IFileSystem fileSystem, out IFileInfo fileInfo)
         {
-            var temp = fileSystem.Path.GetTempPath();
-            var fileName = fileSystem.Path.GetRandomFileName();
-            var path = fileSystem.Path.Combine(temp, fileName);
-
-            return fileSystem.CreateDisposableFile(path, out fileInfo);
+            return fileSystem.CreateDisposableFile(fileSystem.GetRandomTempPath(), out fileInfo);
         }
 
         /// <inheritdoc cref="CreateDisposableFile(IFileSystem, out IFileInfo)"/>
@@ -106,6 +98,15 @@
             fileInfo.Refresh();
 
             return new DisposableFile(fileInfo);
+        }
+
+        private static string GetRandomTempPath(this IFileSystem fileSystem)
+        {
+            var temp = fileSystem.Path.GetTempPath();
+            var fileName = fileSystem.Path.GetRandomFileName();
+            var path = fileSystem.Path.Combine(temp, fileName);
+
+            return path;
         }
 
         private static ArgumentException CreateAlreadyExistsException(string argumentName, string path)
