@@ -13,7 +13,8 @@
         }
 
         /// <summary>
-        /// Creates a new <see cref="DisposableDirectory"/> using a random name from the temp path.
+        /// Creates a new <see cref="IDirectoryInfo"/> using a random name from the temp path, and returns an <see cref="IDisposable"/>
+        /// that deletes the directory when disposed.
         /// </summary>
         /// <param name="fileSystem">
         /// The <see cref="IFileSystem"/> in use.
@@ -22,9 +23,9 @@
         /// The <see cref="IDirectoryInfo"/> for the directory that was created.
         /// </param>
         /// <returns>
-        /// A <see cref="DisposableDirectory"/> to manage the directory's lifetime.
+        /// An <see cref="IDisposable"/> to manage the directory's lifetime.
         /// </returns>
-        public static DisposableDirectory CreateDisposableDirectory(this IFileSystem fileSystem, out IDirectoryInfo directoryInfo)
+        public static IDisposable CreateDisposableDirectory(this IFileSystem fileSystem, out IDirectoryInfo directoryInfo)
         {
             var temp = fileSystem.Path.GetTempPath();
             var fileName = fileSystem.Path.GetRandomFileName();
@@ -33,25 +34,14 @@
             return fileSystem.CreateDisposableDirectory(path, out directoryInfo);
         }
 
-        /// <summary>
-        /// Creates a new <see cref="DisposableDirectory"/> using the provided <paramref name="path"/>.
-        /// </summary>
-        /// <param name="fileSystem">
-        /// The <see cref="IFileSystem"/> in use.
-        /// </param>
+        /// <inheritdoc cref="CreateDisposableDirectory(IFileSystem, out IDirectoryInfo)"/>
         /// <param name="path">
         /// The full path to the directory to create.
         /// </param>
-        /// <param name="directoryInfo">
-        /// The <see cref="IDirectoryInfo"/> for the directory that was craeted.
-        /// </param>
-        /// <returns>
-        /// A <see cref="DisposableDirectory"/> to manage the directory's lifetime.
-        /// </returns>
         /// <exception cref="ArgumentException">
         /// If the directory already exists.
         /// </exception>
-        public static DisposableDirectory CreateDisposableDirectory(this IFileSystem fileSystem, string path, out IDirectoryInfo directoryInfo)
+        public static IDisposable CreateDisposableDirectory(this IFileSystem fileSystem, string path, out IDirectoryInfo directoryInfo)
         {
             directoryInfo = fileSystem.DirectoryInfo.New(path);
 
@@ -70,7 +60,8 @@
         }
 
         /// <summary>
-        /// Creates a new <see cref="DisposableFile"/> using a random name from the temp path.
+        /// Creates a new <see cref="IFileInfo"/> using a random name from the temp path, and returns an <see cref="IDisposable"/>
+        /// that deletes the file when disposed.
         /// </summary>
         /// <param name="fileSystem">
         /// The <see cref="IFileSystem"/> in use.
@@ -79,9 +70,9 @@
         /// The <see cref="IFileInfo"/> for the file that was created.
         /// </param>
         /// <returns>
-        /// A <see cref="DisposableFile"/> to manage the file's lifetime.
+        /// An <see cref="IDisposable"/> to manage the file's lifetime.
         /// </returns>
-        public static DisposableFile CreateDisposableFile(this IFileSystem fileSystem, out IFileInfo fileInfo)
+        public static IDisposable CreateDisposableFile(this IFileSystem fileSystem, out IFileInfo fileInfo)
         {
             var temp = fileSystem.Path.GetTempPath();
             var fileName = fileSystem.Path.GetRandomFileName();
@@ -90,25 +81,14 @@
             return fileSystem.CreateDisposableFile(path, out fileInfo);
         }
 
-        /// <summary>
-        /// Creates a new <see cref="DisposableFile"/> using the provided <paramref name="path"/>.
-        /// </summary>
-        /// <param name="fileSystem">
-        /// The <see cref="IFileSystem"/> in use.
-        /// </param>
+        /// <inheritdoc cref="CreateDisposableFile(IFileSystem, out IFileInfo)"/>
         /// <param name="path">
         /// The full path to the file to create.
         /// </param>
-        /// <param name="fileInfo">
-        /// The <see cref="IFileInfo"/> for the file that was craeted.
-        /// </param>
-        /// <returns>
-        /// A <see cref="DisposableFile"/> to manage the file's lifetime.
-        /// </returns>
         /// <exception cref="ArgumentException">
         /// If the file already exists.
         /// </exception>
-        public static DisposableFile CreateDisposableFile(this IFileSystem fileSystem, string path, out IFileInfo fileInfo)
+        public static IDisposable CreateDisposableFile(this IFileSystem fileSystem, string path, out IFileInfo fileInfo)
         {
             fileInfo = fileSystem.FileInfo.New(path);
 

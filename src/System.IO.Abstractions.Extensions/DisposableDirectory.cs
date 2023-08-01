@@ -8,7 +8,7 @@
     /// created and then deleted when it is no longer referenced. This is sometimes called
     /// the RAII pattern (see https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization).
     /// </remarks>
-    public class DisposableDirectory : IDisposable
+    internal class DisposableDirectory : IDisposable
     {
         private bool isDisposed;
         private readonly IDirectoryInfo directoryInfo;

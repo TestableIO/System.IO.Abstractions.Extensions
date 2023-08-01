@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using System.Runtime;
 
 namespace System.IO.Abstractions.Extensions.Tests
 {
