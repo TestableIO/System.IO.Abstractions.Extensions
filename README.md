@@ -51,7 +51,7 @@ using (var stream = current.FileSystem.FileInfo.FromFileName(current.FileSystem.
     stream.Dispose();
 ```
 
-## CreateDisposableDirectory / CreateDisposableFile extension
+## Automatic cleanup with Disposable extensions
 
 ```csharp
 var fs = new FileSystem();
