@@ -48,10 +48,6 @@
 
             directoryInfo.Create();
 
-            // Do an attribute refresh so that the object we return to the caller
-            // has up-to-date properties (like Exists).
-            directoryInfo.Refresh();
-
             return new DisposableDirectory(directoryInfo);
         }
 
@@ -92,10 +88,6 @@
             // Ensure we close the handle to the file after we create it, otherwise
             // callers may get an access denied error.
             fileInfo.Create().Dispose();
-
-            // Do an attribute refresh so that the object we return to the caller
-            // has up-to-date properties (like Exists).
-            fileInfo.Refresh();
 
             return new DisposableFile(fileInfo);
         }

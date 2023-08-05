@@ -23,6 +23,10 @@
         public DisposableFileSystemInfo(T fileSystemInfo)
         {
             this.fileSystemInfo = fileSystemInfo ?? throw new ArgumentNullException(nameof(fileSystemInfo));
+
+            // Do an attribute refresh so that the object we return to the caller
+            // has up-to-date properties (like Exists).
+            this.fileSystemInfo.Refresh();
         }
 
         /// <summary>
