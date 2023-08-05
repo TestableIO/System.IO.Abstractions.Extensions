@@ -39,6 +39,20 @@
         /// </exception>
         public static IDisposable CreateDisposableDirectory(this IFileSystem fileSystem, string path, out IDirectoryInfo directoryInfo)
         {
+            return fileSystem.CreateDisposableDirectory(path, dir => new DisposableDirectory(dir), out directoryInfo);
+        }
+
+        /// <inheritdoc cref="CreateDisposableDirectory(IFileSystem, string, out IDirectoryInfo)"/>
+        /// <param name="disposableFactory">
+        /// A <see cref="Func{T, TResult}"/> that acts as a factory method. Given the <see cref="IDirectoryInfo"/>, create the
+        /// <see cref="IDisposable"/> that will manage the its lifetime.
+        /// </param>
+        public static T CreateDisposableDirectory<T>(
+            this IFileSystem fileSystem,
+            string path,
+            Func<IDirectoryInfo, T> disposableFactory,
+            out IDirectoryInfo directoryInfo) where T : IDisposable
+        {
             directoryInfo = fileSystem.DirectoryInfo.New(path);
 
             if (directoryInfo.Exists)
@@ -48,7 +62,7 @@
 
             directoryInfo.Create();
 
-            return new DisposableDirectory(directoryInfo);
+            return disposableFactory(directoryInfo);
         }
 
         /// <summary>
@@ -78,6 +92,20 @@
         /// </exception>
         public static IDisposable CreateDisposableFile(this IFileSystem fileSystem, string path, out IFileInfo fileInfo)
         {
+            return fileSystem.CreateDisposableFile(path, file => new DisposableFile(file), out fileInfo);
+        }
+
+        /// <inheritdoc cref="CreateDisposableFile(IFileSystem, string, out IFileInfo)"/>
+        /// <param name="disposableFactory">
+        /// A <see cref="Func{T, TResult}"/> that acts as a factory method. Given the <see cref="IFileInfo"/>, create the
+        /// <see cref="IDisposable"/> that will manage the its lifetime.
+        /// </param>
+        public static T CreateDisposableFile<T>(
+            this IFileSystem fileSystem,
+            string path,
+            Func<IFileInfo, T> disposableFactory,
+            out IFileInfo fileInfo) where T : IDisposable
+        {
             fileInfo = fileSystem.FileInfo.New(path);
 
             if (fileInfo.Exists)
@@ -89,7 +117,7 @@
             // callers may get an access denied error.
             fileInfo.Create().Dispose();
 
-            return new DisposableFile(fileInfo);
+            return disposableFactory(fileInfo);
         }
 
         private static string GetRandomTempPath(this IPath path)

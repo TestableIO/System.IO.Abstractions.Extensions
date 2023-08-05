@@ -9,7 +9,7 @@
     /// created and then deleted when it is no longer referenced. This is sometimes called
     /// the RAII pattern (see https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization).
     /// </remarks>
-    internal class DisposableFileSystemInfo<T> : IDisposable where T : IFileSystemInfo
+    public class DisposableFileSystemInfo<T> : IDisposable where T : IFileSystemInfo
     {
         protected T fileSystemInfo;
         private bool isDisposed;

@@ -5,7 +5,7 @@
     /// deleted when the <see cref="Dispose()"/> method is called.
     /// </summary>
     /// <inheritdoc/>
-    internal class DisposableFile : DisposableFileSystemInfo<IFileInfo>
+    public class DisposableFile : DisposableFileSystemInfo<IFileInfo>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DisposableFile"/> class.
