@@ -40,6 +40,10 @@ namespace System.IO.Abstractions.Extensions
         }
 
         /// <inheritdoc cref="CreateDisposableDirectory(IFileSystem, out IDirectoryInfo)"/>
+        /// <summary>
+        /// Creates a new <see cref="IDirectoryInfo"/> using a path provided by <paramref name="path"/>, and returns an
+        /// <see cref="IDisposable"/> that deletes the directory when disposed.
+        /// </summary>
         /// <param name="path">
         /// The full path to the directory to create.
         /// </param>
@@ -52,6 +56,10 @@ namespace System.IO.Abstractions.Extensions
         }
 
         /// <inheritdoc cref="CreateDisposableDirectory(IFileSystem, string, out IDirectoryInfo)"/>
+        /// <summary>
+        /// Creates a new <see cref="IDirectoryInfo"/> using a path provided by <paramref name="path"/>, and returns an
+        /// <see cref="IDisposable"/> created by <paramref name="disposableFactory"/>, that should delete the directory when disposed.
+        /// </summary>
         /// <param name="disposableFactory">
         /// A <see cref="Func{T, TResult}"/> that acts as a factory method. Given the <see cref="IDirectoryInfo"/>, create the
         /// <see cref="IDisposable"/> that will manage the its lifetime.
@@ -93,6 +101,10 @@ namespace System.IO.Abstractions.Extensions
         }
 
         /// <inheritdoc cref="CreateDisposableFile(IFileSystem, out IFileInfo)"/>
+        /// <summary>
+        /// Creates a new <see cref="IFileInfo"/> using a path provided by <paramref name="path"/>, and returns an
+        /// <see cref="IDisposable"/> that deletes the file when disposed.
+        /// </summary>
         /// <param name="path">
         /// The full path to the file to create.
         /// </param>
@@ -105,6 +117,10 @@ namespace System.IO.Abstractions.Extensions
         }
 
         /// <inheritdoc cref="CreateDisposableFile(IFileSystem, string, out IFileInfo)"/>
+        /// <summary>
+        /// Creates a new <see cref="IFileInfo"/> using a path provided by <paramref name="path"/>, and returns an
+        /// <see cref="IDisposable"/> created by <paramref name="disposableFactory"/>, that should delete the file when disposed.
+        /// </summary>
         /// <param name="disposableFactory">
         /// A <see cref="Func{T, TResult}"/> that acts as a factory method. Given the <see cref="IFileInfo"/>, create the
         /// <see cref="IDisposable"/> that will manage the its lifetime.
