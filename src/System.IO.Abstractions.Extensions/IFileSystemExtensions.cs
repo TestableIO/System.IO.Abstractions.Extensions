@@ -1,4 +1,13 @@
-﻿namespace System.IO.Abstractions.Extensions
+﻿// S3874: "out" and "ref" parameters should not be used
+// https://rules.sonarsource.com/csharp/RSPEC-3874/
+//
+// Our CreateDisposableDirectory / CreateDisposableFile extensions
+// intentionally use an out param so that the DirectoryInfo / FileInfo
+// is passed out (similar to a Try* method) to the caller while the
+// returned object implements IDisposable to leverage the using statement.
+#pragma warning disable S3874
+
+namespace System.IO.Abstractions.Extensions
 {
     public static class IFileSystemExtensions
     {
