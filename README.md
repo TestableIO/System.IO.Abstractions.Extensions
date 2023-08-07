@@ -53,6 +53,9 @@ using (var stream = current.FileSystem.FileInfo.FromFileName(current.FileSystem.
 
 ## Automatic cleanup with Disposable extensions
 
+Use `CreateDisposableDirectory` or `CreateDisposableFile` to create a `IDirectoryInfo` or `IFileInfo` that's automatically
+deleted when the returned `IDisposable` is disposed.
+
 ```csharp
 var fs = new FileSystem();
 
@@ -63,9 +66,9 @@ using (fs.CreateDisposableDirectory(out IDirectoryInfo dir))
 }
 
 //without extension
-var temp = fileSystem.Path.GetTempPath();
-var fileName = fileSystem.Path.GetRandomFileName();
-var path = fileSystem.Path.Combine(temp, fileName);
+var temp = fs.Path.GetTempPath();
+var fileName = fs.Path.GetRandomFileName();
+var path = fs.Path.Combine(temp, fileName);
 
 try
 {
