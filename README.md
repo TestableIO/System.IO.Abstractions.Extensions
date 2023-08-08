@@ -50,3 +50,33 @@ using (var stream = current.File("test.txt").Create())
 using (var stream = current.FileSystem.FileInfo.FromFileName(current.FileSystem.Path.Combine(current.FullName, "test.txt")).Create())
     stream.Dispose();
 ```
+
+## Automatic cleanup with Disposable extensions
+
+Use `CreateDisposableDirectory` or `CreateDisposableFile` to create a `IDirectoryInfo` or `IFileInfo` that's automatically
+deleted when the returned `IDisposable` is disposed.
+
+```csharp
+var fs = new FileSystem();
+
+//with extension
+using (fs.CreateDisposableDirectory(out IDirectoryInfo dir))
+{
+    Console.WriteLine($"This directory will be deleted when control leaves the using block: '{dir.FullName}'");
+}
+
+//without extension
+var temp = fs.Path.GetTempPath();
+var fileName = fs.Path.GetRandomFileName();
+var path = fs.Path.Combine(temp, fileName);
+
+try
+{
+    IDirectoryInfo dir = fs.Directory.CreateDirectory(path);
+    Console.WriteLine($"This directory will be deleted in the finally block: '{dir.FullName}'");
+}
+finally
+{
+    fs.Directory.Delete(path, recursive: true);
+}
+```
