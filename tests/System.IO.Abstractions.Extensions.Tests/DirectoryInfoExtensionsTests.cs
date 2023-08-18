@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace System.IO.Abstractions.Tests
+namespace System.IO.Abstractions.Extensions.Tests
 {
     [TestFixture]
     public class DirectoryInfoExtensionsTests
