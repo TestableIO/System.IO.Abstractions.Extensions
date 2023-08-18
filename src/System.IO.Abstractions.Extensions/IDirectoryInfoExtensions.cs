@@ -1,4 +1,6 @@
-﻿namespace System.IO.Abstractions
+﻿using System.IO.Abstractions.Extensions;
+
+namespace System.IO.Abstractions
 {
     public static class IDirectoryInfoExtensions
     {
@@ -22,6 +24,17 @@
         public static IFileInfo File(this IDirectoryInfo info, string name)
         {
             return info.FileSystem.FileInfo.New(info.FileSystem.Path.Combine(info.FullName, name));
+        }
+
+        /// <summary>
+        /// Throws an exception if the file <paramref name="info"/> doesn't exists
+        /// </summary>
+        /// <param name="info">File that will be checked for existance</param>
+        /// <exception cref="FileNotFoundException">Exception thrown if the file is not found</exception>
+        public static void ThrowIfNotFound(this IDirectoryInfo info)
+        {
+            if (!info.Exists)
+                throw new DirectoryNotFoundException(StringResources.Format("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION", info.FullName));
         }
     }
 }
