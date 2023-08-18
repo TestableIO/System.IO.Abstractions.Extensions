@@ -1,6 +1,4 @@
-﻿using System.IO.Abstractions.Extensions;
-
-namespace System.IO.Abstractions
+﻿namespace System.IO.Abstractions
 {
     public static class IDirectoryInfoExtensions
     {
