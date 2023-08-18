@@ -1,4 +1,4 @@
-﻿namespace System.IO.Abstractions.Extensions
+﻿namespace System.IO.Abstractions
 {
     /// <summary>
     /// Creates a class that wraps a <see cref="IFileInfo"/>. That wrapped file will be

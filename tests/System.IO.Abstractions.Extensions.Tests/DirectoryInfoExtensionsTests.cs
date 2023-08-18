@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace System.IO.Abstractions.Tests
+namespace System.IO.Abstractions.Extensions.Tests
 {
     [TestFixture]
     public class DirectoryInfoExtensionsTests
@@ -56,6 +56,42 @@ namespace System.IO.Abstractions.Tests
             //delete file
             created.Delete();
             Assert.IsFalse(fs.File.Exists(expectedPath));
+        }
+
+        [Test]
+        public void ThrowIfNotFound_IfDirectoryDoesNotExists_ThrowsException()
+        {
+            //arrange
+            var fs = new FileSystem();
+            var current = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory());
+            var guid = Guid.NewGuid().ToString();
+            var directory = current.SubDirectory(guid);
+
+            //act
+            var exception = Assert.Throws<DirectoryNotFoundException>(() => directory.ThrowIfNotFound());
+
+            //assert
+            Assert.IsTrue(exception.Message.Contains(directory.FullName));
+        }
+
+        [Test]
+        public void ThrowIfNotFound_IfDirectoryExists_DoesNotThrowException()
+        {
+            //arrange
+            var fs = new FileSystem();
+            var current = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory());
+            var guid = Guid.NewGuid().ToString();
+            var directory = current.SubDirectory(guid);
+
+            //act
+            directory.Create();
+            directory.ThrowIfNotFound();
+
+            //assert
+            Assert.IsTrue(directory.Exists);
+
+            //cleanup
+            directory.Delete();
         }
     }
 }

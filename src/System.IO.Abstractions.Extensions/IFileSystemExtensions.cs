@@ -7,7 +7,7 @@
 // returned object implements IDisposable to leverage the using statement.
 #pragma warning disable S3874
 
-namespace System.IO.Abstractions.Extensions
+namespace System.IO.Abstractions
 {
     public static class IFileSystemExtensions
     {

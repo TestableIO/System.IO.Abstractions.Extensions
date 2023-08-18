@@ -23,5 +23,16 @@
         {
             return info.FileSystem.FileInfo.New(info.FileSystem.Path.Combine(info.FullName, name));
         }
+
+        /// <summary>
+        /// Throws an exception if the directory <paramref name="info"/> doesn't exists
+        /// </summary>
+        /// <param name="info">Directory that will be checked for existance</param>
+        /// <exception cref="DirectoryNotFoundException">Exception thrown if the directory is not found</exception>
+        public static void ThrowIfNotFound(this IDirectoryInfo info)
+        {
+            if (!info.Exists)
+                throw new DirectoryNotFoundException(StringResources.Format("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION", info.FullName));
+        }
     }
 }
