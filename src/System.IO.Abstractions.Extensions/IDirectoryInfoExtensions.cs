@@ -27,10 +27,10 @@ namespace System.IO.Abstractions
         }
 
         /// <summary>
-        /// Throws an exception if the file <paramref name="info"/> doesn't exists
+        /// Throws an exception if the directory <paramref name="info"/> doesn't exists
         /// </summary>
-        /// <param name="info">File that will be checked for existance</param>
-        /// <exception cref="FileNotFoundException">Exception thrown if the file is not found</exception>
+        /// <param name="info">Directory that will be checked for existance</param>
+        /// <exception cref="DirectoryNotFoundException">Exception thrown if the directory is not found</exception>
         public static void ThrowIfNotFound(this IDirectoryInfo info)
         {
             if (!info.Exists)
