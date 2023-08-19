@@ -54,7 +54,7 @@ namespace System.IO.Abstractions
         /// Get an <see cref="IFileInfo"/> for the specified sub-directories file <paramref name="names"/>
         /// </summary>
         /// <param name="info"></param>
-        /// <param name="names">Sub-directories and file name (ex. "test", "test.txt")</param>
+        /// <param name="names">Sub-directories and file name (ex. "test", "test.txt"). Empty or null names are automatically removed from this list</param>
         /// <returns>An <see cref="IFileInfo"/> for the specified file</returns>
         public static IFileInfo File(this IDirectoryInfo info, params string[] names)
         {
@@ -65,11 +65,11 @@ namespace System.IO.Abstractions
         /// Get an <see cref="IFileInfo"/> for the specified sub-directories file <paramref name="names"/>
         /// </summary>
         /// <param name="info"></param>
-        /// <param name="names">Sub-directories and file name (ex. "test", "test.txt")</param>
+        /// <param name="names">Sub-directories and file name (ex. "test", "test.txt"). Empty or null names are automatically removed from this list</param>
         /// <returns>An <see cref="IFileInfo"/> for the specified file</returns>
         public static IFileInfo File(this IDirectoryInfo info, IEnumerable<string> names)
         {
-            var paths = new[] { info.FullName }.Concat(names).ToArray();
+            var paths = new[] { info.FullName }.Concat(names.Where(n => !String.IsNullOrEmpty(n))).ToArray();
             return info.FileSystem.FileInfo.New(info.FileSystem.Path.Combine(paths));
         }
 

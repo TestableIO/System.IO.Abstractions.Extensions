@@ -60,7 +60,7 @@ namespace System.IO.Abstractions.Extensions.Tests
         [TestCase("test1", "test2")]
         [TestCase("test1", "", "test2")]
         [TestCase("test1", null, "test2")]
-        public void SubDirectoryWithIEnumerable_Extension_Test(params string[] subFolders)
+        public void SubDirectoryWithIEnumerable_Extension_Test(params string[] names)
         {
             //arrange
             var fs = new FileSystem();
@@ -71,7 +71,7 @@ namespace System.IO.Abstractions.Extensions.Tests
             Assert.IsFalse(fs.Directory.Exists(expectedPath));
 
             //create directory
-            var list = new List<string>(subFolders);
+            var list = new List<string>(names);
             var created = current.SubDirectory(list);
             created.Create();
 
@@ -109,6 +109,38 @@ namespace System.IO.Abstractions.Extensions.Tests
 
             //delete file
             created.Delete();
+            Assert.IsFalse(fs.File.Exists(expectedPath));
+        }
+
+        [TestCase("test1", "test2", "test.txt")]
+        [TestCase("test1", "", "test2", "test.txt")]
+        [TestCase("test1", null, "test2", "test.txt")]
+
+        public void FileWithParams_Extension_Test(params string[] names)
+        {
+            //arrange
+            var fs = new FileSystem();
+            var current = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory());
+            var expectedPath = fs.Path.Combine(current.FullName, "test1", "test2", "test.txt");
+
+            //make sure file doesn't exists
+            Assert.IsFalse(fs.File.Exists(expectedPath));
+
+            //act, create file
+            var created = current.File(names);
+            created.Directory.Create();
+            using (var stream = created.Create())
+            {
+                stream.Dispose();
+            }
+
+            //assert it exists
+            Assert.IsTrue(fs.File.Exists(expectedPath));
+            Assert.AreEqual(expectedPath, created.FullName);
+
+            //delete file
+            created.Delete();
+            created.Directory.Delete();
             Assert.IsFalse(fs.File.Exists(expectedPath));
         }
 
