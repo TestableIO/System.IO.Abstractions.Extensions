@@ -1,4 +1,7 @@
-﻿namespace System.IO.Abstractions
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace System.IO.Abstractions
 {
     public static class IDirectoryInfoExtensions
     {
@@ -47,14 +50,27 @@
             return info.FileSystem.FileInfo.New(info.FileSystem.Path.Combine(info.FullName, name));
         }
 
-        public static IFileInfo File(this IDirectoryInfo info, params string[] paths)
+        /// <summary>
+        /// Get an <see cref="IFileInfo"/> for the specified sub-directories file <paramref name="names"/>
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="names">Sub-directories and file name (ex. "test", "test.txt")</param>
+        /// <returns>An <see cref="IFileInfo"/> for the specified file</returns>
+        public static IFileInfo File(this IDirectoryInfo info, params string[] names)
         {
-            return info.FileSystem.FileInfo.FromFileName(info.FileSystem.Path.Combine(info.FullName, paths));
+            return info.File((IEnumerable<string>)names);
         }
 
-        public static IFileInfo File(this IDirectoryInfo info, IEnumerable<string> paths)
+        /// <summary>
+        /// Get an <see cref="IFileInfo"/> for the specified sub-directories file <paramref name="names"/>
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="names">Sub-directories and file name (ex. "test", "test.txt")</param>
+        /// <returns>An <see cref="IFileInfo"/> for the specified file</returns>
+        public static IFileInfo File(this IDirectoryInfo info, IEnumerable<string> names)
         {
-            return info.FileSystem.FileInfo.FromFileName(info.FileSystem.Path.Combine(new[] { info.FullName }.Concat(paths)));
+            var paths = new[] { info.FullName }.Concat(names).ToArray();
+            return info.FileSystem.FileInfo.New(info.FileSystem.Path.Combine(paths));
         }
 
         /// <summary>
