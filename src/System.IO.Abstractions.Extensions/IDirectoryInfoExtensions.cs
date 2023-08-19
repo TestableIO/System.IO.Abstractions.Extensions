@@ -35,8 +35,7 @@ namespace System.IO.Abstractions
         /// <returns>An <see cref="IDirectoryInfo"/> for the specified sub-directory</returns>
         public static IDirectoryInfo SubDirectory(this IDirectoryInfo info, IEnumerable<string> names)
         {
-            var paths = new[] { info.FullName }.Concat(names.Where(n => !String.IsNullOrEmpty(n))).ToArray();
-            return info.FileSystem.DirectoryInfo.New(info.FileSystem.Path.Combine(paths));
+            return info.FileSystem.DirectoryInfo.New(info.FileSystem.Path.Combine(GetPaths(info, names)));
         }
 
         /// <summary>
@@ -69,8 +68,7 @@ namespace System.IO.Abstractions
         /// <returns>An <see cref="IFileInfo"/> for the specified file</returns>
         public static IFileInfo File(this IDirectoryInfo info, IEnumerable<string> names)
         {
-            var paths = new[] { info.FullName }.Concat(names.Where(n => !String.IsNullOrEmpty(n))).ToArray();
-            return info.FileSystem.FileInfo.New(info.FileSystem.Path.Combine(paths));
+            return info.FileSystem.FileInfo.New(info.FileSystem.Path.Combine(GetPaths(info, names)));
         }
 
         /// <summary>
@@ -82,6 +80,13 @@ namespace System.IO.Abstractions
         {
             if (!info.Exists)
                 throw new DirectoryNotFoundException(StringResources.Format("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION", info.FullName));
+        }
+
+        private static string[] GetPaths(IDirectoryInfo info, IEnumerable<string> names)
+        {
+            return new[] { info.FullName }
+                .Concat(names.Where(n => !String.IsNullOrEmpty(n)))
+                .ToArray();
         }
     }
 }
