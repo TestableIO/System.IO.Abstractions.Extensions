@@ -82,11 +82,70 @@ namespace System.IO.Abstractions
                 throw new DirectoryNotFoundException(StringResources.Format("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION", info.FullName));
         }
 
+        /// <summary>
+        /// Checks if <paramref name="ancestor"/> is an ancestor of <paramref name="child"/>
+        /// </summary>
+        /// <param name="ancestor">Ancestor directory</param>
+        /// <param name="child">Child directory (sub-directory)</param>
+        /// <returns>True if <paramref name="ancestor"/> is an ancestor of <paramref name="child"/> otherwise false</returns>
+        public static bool IsAncestorOf(this IDirectoryInfo ancestor, IDirectoryInfo child)
+        {
+            return child.FullName.Length > ancestor.FullName.Length &&
+                   child.FullName.StartsWith(ancestor.FullName);
+        }
+
+        public static string[] Diff(this IDirectoryInfo parent, IDirectoryInfo child)
+        {
+            if (!parent.IsAncestorOf(child))
+                throw new ArgumentException("Child is not a subdirectory of source", nameof(child));
+
+            return child.FullName.Substring(parent.FullName.Length + 1)
+                .Split(parent.FileSystem.Path.PathSeparator);
+        }
+
+        public static void ForEachFile(
+            this IDirectoryInfo info, Action<IFileInfo, IDirectoryInfo> fileAction,
+            Func<IDirectoryInfo, IDirectoryInfo> directoryAction,
+            bool resurse)
+        {
+            if (resurse)
+            {
+                foreach (var dir in info.EnumerateDirectories())
+                {
+                    dir.ForEachFile(fileAction, directoryAction, resurse);
+                }
+            }
+
+            var d = directoryAction?.Invoke(info) ?? info;
+            foreach (var file in info.EnumerateFiles())
+            {
+                fileAction.Invoke(file, d);
+            }
+        }
+
+        public static void Copy(this IDirectoryInfo source, IDirectoryInfo destination, bool recurse)
+        {
+            source.ForEachFile(
+                (f, d) => f.CopyTo(d.File(f.Name).FullName),
+                d => GetCopyDestination(source, d, destination),
+                recurse);
+        }
+
         private static string[] GetPaths(IDirectoryInfo info, IEnumerable<string> names)
         {
             return new[] { info.FullName }
                 .Concat(names.Where(n => !String.IsNullOrEmpty(n)))
                 .ToArray();
+        }
+
+        private static IDirectoryInfo GetCopyDestination(
+            this IDirectoryInfo source,
+            IDirectoryInfo current,
+            IDirectoryInfo destination)
+        {
+            return source.Equals(current)
+                ? destination
+                : destination.SubDirectory(source.Diff(current));
         }
     }
 }
