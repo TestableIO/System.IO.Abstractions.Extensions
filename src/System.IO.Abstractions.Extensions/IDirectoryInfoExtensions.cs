@@ -90,7 +90,9 @@ namespace System.IO.Abstractions
         public static void ThrowIfNotFound(this IDirectoryInfo info)
         {
             if (!info.Exists)
+            {
                 throw new DirectoryNotFoundException(StringResources.Format("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION", info.FullName));
+            }
         }
 
         /// <summary>
@@ -118,7 +120,9 @@ namespace System.IO.Abstractions
         public static string[] DiffPaths(this IDirectoryInfo ancestor, IDirectoryInfo child)
         {
             if (!ancestor.IsAncestorOf(child))
+            {
                 throw new ArgumentException(StringResources.Format("NOT_AN_ANCESTOR", ancestor.FullName, child.FullName), nameof(child));
+            }
 
             return child.FullName.Substring(ancestor.FullName.Length + 1)
                 .Split(ancestor.FileSystem.Path.PathSeparator);
@@ -146,7 +150,9 @@ namespace System.IO.Abstractions
                 : ancestor2.SubDirectory(ancestor1.DiffPaths(child));
 
             if (create)
+            {
                 ret.Create();
+            }
 
             return ret;
         }
@@ -178,7 +184,9 @@ namespace System.IO.Abstractions
             }
 
             if (!recursive)
+            {
                 return;
+            }
 
             foreach (var dir in info.EnumerateDirectories(directoriesSearchPattern))
             {
