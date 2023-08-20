@@ -68,6 +68,7 @@ namespace System.IO.Abstractions.Extensions.Tests
             var actual = file.EnumerateLines().ToArray();
 
             //assert
+            Assert.AreEqual(content.Length, actual.Length);
             for(int i=0; i<content.Length; i++)
             {
                 Assert.AreEqual(content[i], actual[i]);

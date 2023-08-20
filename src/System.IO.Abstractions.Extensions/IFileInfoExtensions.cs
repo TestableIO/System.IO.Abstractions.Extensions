@@ -17,11 +17,22 @@ namespace System.IO.Abstractions
                 throw new FileNotFoundException(StringResources.Format("COULD_NOT_FIND_FILE_EXCEPTION", info.FullName));
         }
 
+        /// <summary>
+        /// Creates an <see cref="IEnumerable{String}"/> that can enumerate the lines of text in the <paramref name="info"/> file
+        /// </summary>
+        /// <param name="info">File to enumerate content</param>
+        /// <returns>Returns an <see cref="IEnumerable{String}"/> to enumerate the content of the file</returns>
         public static IEnumerable<string> EnumerateLines(this IFileInfo info)
         {
             return new LineEnumerable(info, null);
         }
 
+        /// <summary>
+        /// Creates an <see cref="IEnumerable{String}"/> that can enumerate the lines of text in the <paramref name="info"/> file
+        /// using the specified <paramref name="encoding"/>
+        /// </summary>
+        /// <param name="info">File to enumerate content</param>
+        /// <returns>Returns an <see cref="IEnumerable{String}"/> to enumerate the content of the file</returns>
         public static IEnumerable<string> EnumerateLines(this IFileInfo info, Encoding encoding)
         {
             return new LineEnumerable(info, encoding);
