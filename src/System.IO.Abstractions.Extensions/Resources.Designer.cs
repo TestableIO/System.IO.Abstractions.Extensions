@@ -77,5 +77,14 @@ namespace System.IO.Abstractions {
                 return ResourceManager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; is not an ancestor of &apos;{1}&apos;.
+        /// </summary>
+        internal static string NOT_AN_ANCESTOR {
+            get {
+                return ResourceManager.GetString("NOT_AN_ANCESTOR", resourceCulture);
+            }
+        }
     }
 }

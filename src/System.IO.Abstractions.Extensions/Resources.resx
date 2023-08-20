@@ -123,4 +123,7 @@
   <data name="COULD_NOT_FIND_PART_OF_PATH_EXCEPTION" xml:space="preserve">
     <value>Could not find a part of the path '{0}'.</value>
   </data>
+  <data name="NOT_AN_ANCESTOR" xml:space="preserve">
+    <value>'{0}' is not an ancestor of '{1}'</value>
+  </data>
 </root>

@@ -107,7 +107,7 @@ namespace System.IO.Abstractions
         public static string[] DiffPaths(this IDirectoryInfo ancestor, IDirectoryInfo child)
         {
             if (!ancestor.IsAncestorOf(child))
-                throw new ArgumentException("Child is not a subdirectory of source", nameof(child));
+                throw new ArgumentException(StringResources.Format("NOT_AN_ANCESTOR", ancestor.FullName, child.FullName), nameof(child));
 
             return child.FullName.Substring(ancestor.FullName.Length + 1)
                 .Split(ancestor.FileSystem.Path.PathSeparator);
