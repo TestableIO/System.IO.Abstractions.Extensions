@@ -50,6 +50,17 @@ namespace System.IO.Abstractions
         }
 
         /// <summary>
+        /// Get the full path for the specified file <paramref name="name"/> in the <paramref name="info"/> folder
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="name">File name (ex. "test.txt")</param>
+        /// <returns>A <see cref="string"/> with the full path of the file</returns>
+        public static string GetFilePath(this IDirectoryInfo info, string name)
+        {
+            return info.FileSystem.Path.Combine(info.FullName, name);
+        }
+
+        /// <summary>
         /// Get an <see cref="IFileInfo"/> for the specified sub-directories file <paramref name="names"/>
         /// </summary>
         /// <param name="info"></param>
@@ -79,7 +90,131 @@ namespace System.IO.Abstractions
         public static void ThrowIfNotFound(this IDirectoryInfo info)
         {
             if (!info.Exists)
+            {
                 throw new DirectoryNotFoundException(StringResources.Format("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION", info.FullName));
+            }
+        }
+
+        /// <summary>
+        /// Checks if <paramref name="ancestor"/> is an ancestor of <paramref name="child"/>.
+        /// If <paramref name="ancestor"/> is a parent this method will return <see cref="true"/>
+        /// If <paramref name="ancestor"/> and <paramref name="child"/> are the same directory, this will return <see cref="false"/>
+        /// </summary>
+        /// <param name="ancestor">Ancestor directory</param>
+        /// <param name="child">Child directory (sub-directory)</param>
+        /// <returns>True if <paramref name="ancestor"/> is an ancestor of <paramref name="child"/> otherwise false</returns>
+        public static bool IsAncestorOf(this IDirectoryInfo ancestor, IDirectoryInfo child)
+        {
+            return child.FullName.Length > ancestor.FullName.Length &&
+                   child.FullName.StartsWith(ancestor.FullName);
+        }
+
+        /// <summary>
+        /// Checks if <paramref name="ancestor"/> is an ancestor of <paramref name="child"/> and returns
+        /// a list of segments of the paths of <paramref name="child"/> that are not in common with <paramref name="ancestor"/>
+        /// </summary>
+        /// <param name="ancestor">Ancestor directory</param>
+        /// <param name="child">Child directory (sub-directory)</param>
+        /// <returns>A <see cref="string[]"/> with the segments of the paths of <paramref name="child"/> not in common with <paramref name="ancestor"/></returns>
+        /// <exception cref="ArgumentException">Exception thrown if <paramref name="ancestor"/> is not an ancestor of <paramref name="child"/></exception>
+        public static string[] DiffPaths(this IDirectoryInfo ancestor, IDirectoryInfo child)
+        {
+            if (!ancestor.IsAncestorOf(child))
+            {
+                throw new ArgumentException(StringResources.Format("NOT_AN_ANCESTOR", ancestor.FullName, child.FullName), nameof(child));
+            }
+
+            return child.FullName.Substring(ancestor.FullName.Length + 1)
+                .Split(ancestor.FileSystem.Path.PathSeparator);
+        }
+
+        /// <summary>
+        /// Applies a <see cref="DiffPaths(IDirectoryInfo, IDirectoryInfo)"/> between <paramref name="ancestor1"/> and <paramref name="child"/>.
+        /// The resulting diff of path segments is applied to <paramref name="ancestor2"/> and returned.
+        /// If the flag <paramref name="create"/> is set to true the resulting subdirectory of <paramref name="ancestor2"/> will also be created.
+        /// <paramref name="ancestor1"/> must be the same directory or an ancestor of <paramref name="child"/> otherwise this method will throw an <see cref="ArgumentException"/>
+        /// </summary>
+        /// <param name="ancestor1">Ancestor directory</param>
+        /// <param name="child">Child directory (sub-directory)</param>
+        /// <param name="ancestor2">Directory to apply the diff to</param>
+        /// <param name="create">If set to true, the resulting directory will also be created</param>
+        /// <returns>An <see cref="IDirectoryInfo"/> which is either a child of <paramref name="ancestor2"/> or <paramref name="ancestor2"/> ifself</returns>
+        public static IDirectoryInfo TranslatePaths(
+            this IDirectoryInfo ancestor1,
+            IDirectoryInfo child,
+            IDirectoryInfo ancestor2,
+            bool create = false)
+        {
+            var ret = ancestor1.Equals(child)
+                ? ancestor2
+                : ancestor2.SubDirectory(ancestor1.DiffPaths(child));
+
+            if (create)
+            {
+                ret.Create();
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Executes a <paramref name="fileAction"/> for each file in the <paramref name="info"/> directory
+        /// A <paramref name="directoryAction"/> action is also executed before entering any directory, including <paramref name="info"/>
+        /// The <see cref="IDirectoryInfo"/> returned by <paramref name="directoryAction"/> is passed as parameter into <paramref name="fileAction"/>
+        /// </summary>
+        /// <param name="info">Directory where to search for files</param>
+        /// <param name="fileAction">Action to apply for each file found in <paramref name="info"/></param>
+        /// <param name="directoryAction">Action to apply upon entering any directory including <paramref name="info"/></param>
+        /// <param name="recursive">If true the search will be recursive and will include subfolders of <paramref name="info"/>. Defaults to false</param>
+        /// <param name="filesSearchPattern">Search pattern to apply when searching files, defaults to '*'</param>
+        /// <param name="directoriesSearchPattern">Search pattern to apply when searching directories, defaults to '*'</param>
+        public static void ForEachFile(
+            this IDirectoryInfo info, Action<IFileInfo, IDirectoryInfo> fileAction,
+            Func<IDirectoryInfo, IDirectoryInfo> directoryAction,
+            bool recursive = false,
+            string filesSearchPattern = "*",
+            string directoriesSearchPattern = "*")
+        {
+            info.ThrowIfNotFound();
+
+            var d = directoryAction?.Invoke(info) ?? info;
+            foreach (var file in info.EnumerateFiles(filesSearchPattern))
+            {
+                fileAction.Invoke(file, d);
+            }
+
+            if (!recursive)
+            {
+                return;
+            }
+
+            foreach (var dir in info.EnumerateDirectories(directoriesSearchPattern))
+            {
+                dir.ForEachFile(fileAction, directoryAction, recursive, filesSearchPattern, directoriesSearchPattern);
+            }
+        }
+
+        /// <summary>
+        /// Copies files from <paramref name="source"/> to <paramref name="destination"/>
+        /// </summary>
+        /// <param name="source">Source directory</param>
+        /// <param name="destination">Destination directory</param>
+        /// <param name="recursive">If true the copy will be recursive and will include subfolders of <paramref name="info"/>. Defaults to false</param>
+        /// <param name="filesSearchPattern">Search pattern to apply when searching files, defaults to '*'</param>
+        /// <param name="directoriesSearchPattern">Search pattern to apply when searching directories, defaults to '*'</param>
+        public static void CopyTo(
+            this IDirectoryInfo source,
+            IDirectoryInfo destination,
+            bool recursive = false,
+            string filesSearchPattern = "*",
+            string directoriesSearchPattern = "*")
+        {
+            source.ForEachFile(
+                (file, destDir) => file.CopyTo(destDir.GetFilePath(file.Name)),
+                subDirectory => source.TranslatePaths(subDirectory, destination, true),
+                recursive,
+                filesSearchPattern,
+                directoriesSearchPattern);
         }
 
         private static string[] GetPaths(IDirectoryInfo info, IEnumerable<string> names)

@@ -80,3 +80,19 @@ finally
     fs.Directory.Delete(path, recursive: true);
 }
 ```
+
+## IDirectoryInfo.CopyTo extension
+```csharp
+var fs = new FileSystem();
+var current = fs.CurrentDirectory();
+
+//source
+var source =  current.SubDirectory("source");
+source.Create(); //make sure the source directory exists
+
+//destination
+var dest = current.SubDirectory("destination");
+
+//copy
+source.CopyTo(dest, recursive: true);
+```
