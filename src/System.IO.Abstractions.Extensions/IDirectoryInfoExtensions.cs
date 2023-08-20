@@ -158,6 +158,8 @@ namespace System.IO.Abstractions
             string filesSearchPattern = "*",
             string directoriesSearchPattern = "*")
         {
+            info.ThrowIfNotFound();
+
             var d = directoryAction?.Invoke(info) ?? info;
             foreach (var file in info.EnumerateFiles(filesSearchPattern))
             {
