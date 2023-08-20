@@ -1,4 +1,8 @@
-﻿namespace System.IO.Abstractions
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Text;
+
+namespace System.IO.Abstractions
 {
     public static class IFileInfoExtensions
     {
@@ -11,6 +15,16 @@
         {
             if (!info.Exists)
                 throw new FileNotFoundException(StringResources.Format("COULD_NOT_FIND_FILE_EXCEPTION", info.FullName));
+        }
+
+        public static IEnumerable<string> EnumerateLines(this IFileInfo info)
+        {
+            return new LineEnumerable(info, null);
+        }
+
+        public static IEnumerable<string> EnumerateLines(this IFileInfo info, Encoding encoding)
+        {
+            return new LineEnumerable(info, encoding);
         }
     }
 }
