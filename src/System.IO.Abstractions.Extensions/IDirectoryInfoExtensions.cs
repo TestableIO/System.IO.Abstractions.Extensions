@@ -148,13 +148,13 @@ namespace System.IO.Abstractions
         /// <param name="info">Directory where to search for files</param>
         /// <param name="fileAction">Action to apply for each file found in <paramref name="info"/></param>
         /// <param name="directoryAction">Action to apply upon entering any directory including <paramref name="info"/></param>
-        /// <param name="resurse">If true the search will be recursive and will include subfolders of <paramref name="info"/>. Defaults to true</param>
+        /// <param name="recursive">If true the search will be recursive and will include subfolders of <paramref name="info"/>. Defaults to false</param>
         /// <param name="filesSearchPattern">Search pattern to apply when searching files, defaults to '*'</param>
         /// <param name="directoriesSearchPattern">Search pattern to apply when searching directories, defaults to '*'</param>
         public static void ForEachFile(
             this IDirectoryInfo info, Action<IFileInfo, IDirectoryInfo> fileAction,
             Func<IDirectoryInfo, IDirectoryInfo> directoryAction,
-            bool resurse = true,
+            bool recursive = false,
             string filesSearchPattern = "*",
             string directoriesSearchPattern = "*")
         {
@@ -164,12 +164,12 @@ namespace System.IO.Abstractions
                 fileAction.Invoke(file, d);
             }
 
-            if (!resurse)
+            if (!recursive)
                 return;
 
             foreach (var dir in info.EnumerateDirectories(directoriesSearchPattern))
             {
-                dir.ForEachFile(fileAction, directoryAction, resurse, filesSearchPattern, directoriesSearchPattern);
+                dir.ForEachFile(fileAction, directoryAction, recursive, filesSearchPattern, directoriesSearchPattern);
             }
         }
 
@@ -178,20 +178,20 @@ namespace System.IO.Abstractions
         /// </summary>
         /// <param name="source">Source directory</param>
         /// <param name="destination">Destination directory</param>
-        /// <param name="resurse">If true the copy will be recursive and will include subfolders of <paramref name="info"/>. Defaults to true</param>
+        /// <param name="recursive">If true the copy will be recursive and will include subfolders of <paramref name="info"/>. Defaults to false</param>
         /// <param name="filesSearchPattern">Search pattern to apply when searching files, defaults to '*'</param>
         /// <param name="directoriesSearchPattern">Search pattern to apply when searching directories, defaults to '*'</param>
         public static void CopyTo(
             this IDirectoryInfo source,
             IDirectoryInfo destination,
-            bool recurse = true,
+            bool recursive = false,
             string filesSearchPattern = "*",
             string directoriesSearchPattern = "*")
         {
             source.ForEachFile(
                 (f, d) => f.CopyTo(d.File(f.Name).FullName),
-                d => TranslatePaths(source, d, destination, true),
-                recurse,
+                subDirectory => source.TranslatePaths(subDirectory, destination, true),
+                recursive,
                 filesSearchPattern,
                 directoriesSearchPattern);
         }
