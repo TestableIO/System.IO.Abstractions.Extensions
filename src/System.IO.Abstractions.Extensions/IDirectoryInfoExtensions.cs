@@ -94,7 +94,7 @@ namespace System.IO.Abstractions
                    child.FullName.StartsWith(ancestor.FullName);
         }
 
-        public static string[] Diff(this IDirectoryInfo parent, IDirectoryInfo child)
+        public static string[] DiffPaths(this IDirectoryInfo parent, IDirectoryInfo child)
         {
             if (!parent.IsAncestorOf(child))
                 throw new ArgumentException("Child is not a subdirectory of source", nameof(child));
@@ -145,7 +145,7 @@ namespace System.IO.Abstractions
         {
             return source.Equals(current)
                 ? destination
-                : destination.SubDirectory(source.Diff(current));
+                : destination.SubDirectory(source.DiffPaths(current));
         }
     }
 }
