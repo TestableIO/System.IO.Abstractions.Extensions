@@ -50,6 +50,17 @@ namespace System.IO.Abstractions
         }
 
         /// <summary>
+        /// Get the full path for the specified file <paramref name="name"/> in the <paramref name="info"/> folder
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="name">File name (ex. "test.txt")</param>
+        /// <returns>A <see cref="string"/> with the full path of the file</returns>
+        public static string GetFilePath(this IDirectoryInfo info, string name)
+        {
+            return info.FileSystem.Path.Combine(info.FullName, name);
+        }
+
+        /// <summary>
         /// Get an <see cref="IFileInfo"/> for the specified sub-directories file <paramref name="names"/>
         /// </summary>
         /// <param name="info"></param>
@@ -191,7 +202,7 @@ namespace System.IO.Abstractions
             string directoriesSearchPattern = "*")
         {
             source.ForEachFile(
-                (f, d) => f.CopyTo(d.File(f.Name).FullName),
+                (file, destDir) => file.CopyTo(destDir.GetFilePath(file.Name)),
                 subDirectory => source.TranslatePaths(subDirectory, destination, true),
                 recursive,
                 filesSearchPattern,
