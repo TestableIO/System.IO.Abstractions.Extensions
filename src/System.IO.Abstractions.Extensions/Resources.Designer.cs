@@ -61,7 +61,7 @@ namespace System.IO.Abstractions {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File &apos;{0}&apos; already exists.
+        ///   Looks up a localized string similar to The file &apos;{0}&apos; already exists..
         /// </summary>
         internal static string CANNOT_OVERWRITE {
             get {
@@ -88,7 +88,7 @@ namespace System.IO.Abstractions {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; is not an ancestor of &apos;{1}&apos;.
+        ///   Looks up a localized string similar to &apos;{0}&apos; is not an ancestor of &apos;{1}&apos;..
         /// </summary>
         internal static string NOT_AN_ANCESTOR {
             get {
