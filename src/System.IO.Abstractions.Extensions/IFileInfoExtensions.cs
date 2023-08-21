@@ -38,7 +38,19 @@ namespace System.IO.Abstractions
         }
 
         /// <summary>
-        /// Writes the specified <paramref name="lines"/> to the specified <paramref name="info"/> file
+        /// Opens a <see cref="FileSystemStream"/> for the <paramref name="file"/> in the specified <paramref name="mode"/>
+        /// </summary>
+        /// <param name="file">File to open stream on</param>
+        /// <param name="mode">Mode to use when opening the file</param>
+        /// <returns>A <see cref="FileSystemStream"/> to read or write data to the specified <paramref name="file"/></returns>
+        public static FileSystemStream OpenFileStream(this IFileInfo file, FileMode mode)
+        {
+            return file.FileSystem.FileStream.New(file.FullName, mode);
+        }
+
+        /// <summary>
+        /// Writes the specified <paramref name="lines"/> to the specified <paramref name="info"/> file using the UTF-8 encoding.
+        /// If the file already exists and the <paramref name="overwrite"/> flag is set to true, the file will be truncated.
         /// </summary>
         /// <param name="info">File to write to</param>
         /// <param name="lines">Lines to write to file as text</param>
@@ -46,9 +58,8 @@ namespace System.IO.Abstractions
         /// <exception cref="IOException">Exception thrown if the file already exists and the <paramref name="overwrite"/> flag is set to <see cref="false"/></exception>
         public static void WriteLines(this IFileInfo info, IEnumerable<string> lines, bool overwrite = false)
         {
-            CheckIfCanOverwriteFile(info, overwrite);
-
-            using (var writer = info.CreateText())
+            using (var stream = info.OpenFileStream(GetWriteFileMode(info, overwrite)))
+            using (var writer = new StreamWriter(stream))
             foreach(var line in lines)
             {
                 writer.WriteLine(line);
@@ -57,7 +68,8 @@ namespace System.IO.Abstractions
 
         /// <summary>
         /// Writes the specified <paramref name="lines"/> to the specified <paramref name="info"/> file
-        /// using the specified <paramref name="encoding"/>
+        /// using the specified <paramref name="encoding"/>.
+        /// If the file already exists and the <paramref name="overwrite"/> flag is set to true, the file will be truncated.
         /// </summary>
         /// <param name="info">File to write to</param>
         /// <param name="lines">Lines to write to file as text</param>
@@ -66,9 +78,7 @@ namespace System.IO.Abstractions
         /// <exception cref="IOException">Exception thrown if the file already exists and the <paramref name="overwrite"/> flag is set to <see cref="false"/></exception>
         public static void WriteLines(this IFileInfo info, IEnumerable<string> lines, Encoding encoding, bool overwrite = false)
         {
-            CheckIfCanOverwriteFile(info, overwrite);
-
-            using (var stream = info.OpenWrite())
+            using (var stream = info.OpenFileStream(GetWriteFileMode(info, overwrite)))
             using (var writer = new StreamWriter(stream, encoding))
             foreach (var line in lines)
             {
@@ -90,19 +100,15 @@ namespace System.IO.Abstractions
             }
         }
 
-        private static void CheckIfCanOverwriteFile(IFileInfo info, bool overwrite)
+        private static FileMode GetWriteFileMode(IFileInfo info, bool overwrite)
         {
-            if (!info.Exists)
-            {
-                return;
-            }
-
-            if (!overwrite)
+            if (!overwrite && info.Exists)
             {
                 throw new IOException(StringResources.Format("CANNOT_OVERWRITE", info.FullName));
             }
 
-            info.Delete();
+            //if the file already exists it will be truncated
+            return FileMode.Create;
         }
     }
 }
