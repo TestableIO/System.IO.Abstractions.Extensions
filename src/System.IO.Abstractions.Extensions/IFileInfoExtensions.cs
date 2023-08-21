@@ -6,35 +6,35 @@ namespace System.IO.Abstractions
     public static class IFileInfoExtensions
     {
         /// <summary>
-        /// Throws an exception if the file <paramref name="info"/> doesn't exists
+        /// Throws an exception if the <paramref name="file"/> doesn't exists
         /// </summary>
-        /// <param name="info">File that will be checked for existance</param>
+        /// <param name="file">File that will be checked for existance</param>
         /// <exception cref="FileNotFoundException">Exception thrown if the file is not found</exception>
-        public static void ThrowIfNotFound(this IFileInfo info)
+        public static void ThrowIfNotFound(this IFileInfo file)
         {
-            if (!info.Exists)
-                throw new FileNotFoundException(StringResources.Format("COULD_NOT_FIND_FILE_EXCEPTION", info.FullName));
+            if (!file.Exists)
+                throw new FileNotFoundException(StringResources.Format("COULD_NOT_FIND_FILE_EXCEPTION", file.FullName));
         }
 
         /// <summary>
-        /// Creates an <see cref="IEnumerable{String}"/> that can enumerate the lines of text in the <paramref name="info"/> file
+        /// Creates an <see cref="IEnumerable{String}"/> that can enumerate the lines of text in the <paramref name="file"/>
         /// </summary>
-        /// <param name="info">File to enumerate content</param>
+        /// <param name="file">File to enumerate content</param>
         /// <returns>Returns an <see cref="IEnumerable{String}"/> to enumerate the content of the file</returns>
-        public static IEnumerable<string> EnumerateLines(this IFileInfo info)
+        public static IEnumerable<string> EnumerateLines(this IFileInfo file)
         {
-            return new LineEnumerable(info, null);
+            return new LineEnumerable(file, null);
         }
 
         /// <summary>
-        /// Creates an <see cref="IEnumerable{String}"/> that can enumerate the lines of text in the <paramref name="info"/> file
+        /// Creates an <see cref="IEnumerable{String}"/> that can enumerate the lines of text in the specified <paramref name="file"/>
         /// using the specified <paramref name="encoding"/>
         /// </summary>
-        /// <param name="info">File to enumerate content</param>
+        /// <param name="file">File to enumerate content</param>
         /// <returns>Returns an <see cref="IEnumerable{String}"/> to enumerate the content of the file</returns>
-        public static IEnumerable<string> EnumerateLines(this IFileInfo info, Encoding encoding)
+        public static IEnumerable<string> EnumerateLines(this IFileInfo file, Encoding encoding)
         {
-            return new LineEnumerable(info, encoding);
+            return new LineEnumerable(file, encoding);
         }
 
         /// <summary>
@@ -49,16 +49,16 @@ namespace System.IO.Abstractions
         }
 
         /// <summary>
-        /// Writes the specified <paramref name="lines"/> to the specified <paramref name="info"/> file using the UTF-8 encoding.
+        /// Writes the specified <paramref name="lines"/> to the specified <paramref name="file"/> using the UTF-8 encoding.
         /// If the file already exists and the <paramref name="overwrite"/> flag is set to true, the file will be truncated.
         /// </summary>
-        /// <param name="info">File to write to</param>
+        /// <param name="file">File to write to</param>
         /// <param name="lines">Lines to write to file as text</param>
         /// <param name="overwrite">Flag that specifies if the file can be overwritten if it exists</param>
         /// <exception cref="IOException">Exception thrown if the file already exists and the <paramref name="overwrite"/> flag is set to <see cref="false"/></exception>
-        public static void WriteLines(this IFileInfo info, IEnumerable<string> lines, bool overwrite = false)
+        public static void WriteLines(this IFileInfo file, IEnumerable<string> lines, bool overwrite = false)
         {
-            using (var stream = info.OpenFileStream(GetWriteFileMode(info, overwrite)))
+            using (var stream = file.OpenFileStream(GetWriteFileMode(file, overwrite)))
             using (var writer = new StreamWriter(stream))
             foreach(var line in lines)
             {
@@ -67,18 +67,18 @@ namespace System.IO.Abstractions
         }
 
         /// <summary>
-        /// Writes the specified <paramref name="lines"/> to the specified <paramref name="info"/> file
+        /// Writes the specified <paramref name="lines"/> to the specified <paramref name="file"/>
         /// using the specified <paramref name="encoding"/>.
         /// If the file already exists and the <paramref name="overwrite"/> flag is set to true, the file will be truncated.
         /// </summary>
-        /// <param name="info">File to write to</param>
+        /// <param name="file">File to write to</param>
         /// <param name="lines">Lines to write to file as text</param>
         /// <param name="encoding">Encoding to use when writing the <paramref name="lines"/> to the text file</param>
         /// <param name="overwrite">Flag that specifies if the file can be overwritten if it exists</param>
         /// <exception cref="IOException">Exception thrown if the file already exists and the <paramref name="overwrite"/> flag is set to <see cref="false"/></exception>
-        public static void WriteLines(this IFileInfo info, IEnumerable<string> lines, Encoding encoding, bool overwrite = false)
+        public static void WriteLines(this IFileInfo file, IEnumerable<string> lines, Encoding encoding, bool overwrite = false)
         {
-            using (var stream = info.OpenFileStream(GetWriteFileMode(info, overwrite)))
+            using (var stream = file.OpenFileStream(GetWriteFileMode(file, overwrite)))
             using (var writer = new StreamWriter(stream, encoding))
             foreach (var line in lines)
             {
@@ -87,13 +87,13 @@ namespace System.IO.Abstractions
         }
 
         /// <summary>
-        /// Appends the specified <paramref name="lines"/> to the specified <paramref name="info"/> file
+        /// Appends the specified <paramref name="lines"/> to the specified <paramref name="file"/>
         /// </summary>
-        /// <param name="info">File to append to</param>
+        /// <param name="file">File to append to</param>
         /// <param name="lines">Lines to append to file as text</param>
-        public static void AppendLines(this IFileInfo info, IEnumerable<string> lines)
+        public static void AppendLines(this IFileInfo file, IEnumerable<string> lines)
         {
-            using (var writer = info.AppendText())
+            using (var writer = file.AppendText())
             foreach (var line in lines)
             {
                 writer.WriteLine(line);
