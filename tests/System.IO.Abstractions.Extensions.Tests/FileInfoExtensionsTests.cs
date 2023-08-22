@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -34,10 +33,7 @@ namespace System.IO.Abstractions.Extensions.Tests
             var file = current.File(guid);
 
             //act
-            using (var stream = file.Create())
-            {
-                stream.Dispose();
-            }
+            file.Truncate();
             file.ThrowIfNotFound();
 
             //assert
@@ -45,6 +41,50 @@ namespace System.IO.Abstractions.Extensions.Tests
 
             //cleanup
             file.Delete();
+        }
+
+        [Test]
+        public void Truncate_AnExistingFileWithContent_FileExistsAndIsEmpty()
+        {
+            //arrange
+            var fs = new FileSystem();
+            var current = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory());
+            var guid = Guid.NewGuid().ToString();
+            var file = current.File(guid);
+            //create file
+            using (var stream = file.OpenWrite())
+            using (var writer = new StreamWriter(stream, Encoding.UTF8))
+            {
+                writer.WriteLine("test");
+            }
+            file.Refresh();
+            Assert.IsTrue(file.Exists);
+            Assert.IsTrue(file.Length >= 4);
+
+            //act
+            file.Truncate();
+
+            //assert
+            file.Refresh();
+            Assert.AreEqual(0, file.Length);
+        }
+
+        [Test]
+        public void Truncate_ANewFile_FileExistsAndIsEmpty()
+        {
+            //arrange
+            var fs = new FileSystem();
+            var current = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory());
+            var guid = Guid.NewGuid().ToString();
+            var file = current.File(guid);
+            Assert.IsFalse(file.Exists);
+
+            //act
+            file.Truncate();
+
+            //assert
+            file.Refresh();
+            Assert.AreEqual(0, file.Length);
         }
 
         [TestCase("line1", "line2", "line3")]
@@ -107,12 +147,7 @@ namespace System.IO.Abstractions.Extensions.Tests
             var current = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory());
             var guid = Guid.NewGuid().ToString();
             var file = current.File(guid);
-
-            //create empty file
-            using (var stream = file.OpenWrite())
-            {
-                stream.Dispose();
-            }
+            file.Truncate();
 
             //act & assert
             Assert.IsTrue(file.Exists);

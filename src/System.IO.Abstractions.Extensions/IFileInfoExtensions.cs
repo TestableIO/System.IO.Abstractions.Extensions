@@ -49,6 +49,22 @@ namespace System.IO.Abstractions
         }
 
         /// <summary>
+        /// Creates a new empty <paramref name="file"/>.
+        /// If the file already exists, the file is truncated.
+        /// </summary>
+        /// <param name="file">File to create</param>
+        /// <returns>The original <see cref="IFileInfo"/> so that methods calls can be chained</returns>
+        public static IFileInfo Truncate(this IFileInfo file)
+        {
+            using(var stream = file.OpenFileStream(FileMode.Create))
+            {
+                stream.Dispose();
+            }
+
+            return file;
+        }
+
+        /// <summary>
         /// Writes the specified <paramref name="lines"/> to the specified <paramref name="file"/> using the UTF-8 encoding.
         /// If the file already exists and the <paramref name="overwrite"/> flag is set to true, the file will be truncated.
         /// </summary>
