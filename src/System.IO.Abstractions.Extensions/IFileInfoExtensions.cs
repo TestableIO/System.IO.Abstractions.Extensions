@@ -42,7 +42,7 @@ namespace System.IO.Abstractions
         /// </summary>
         /// <param name="file">File to open stream on</param>
         /// <param name="mode">Mode to use when opening the file</param>
-        /// <returns>A <see cref="FileSystemStream"/> to read or write data to the specified <paramref name="file"/></returns>
+        /// <returns>A <see cref="FileSystemStream"/> that can read or write data to the specified <paramref name="file"/></returns>
         public static FileSystemStream OpenFileStream(this IFileInfo file, FileMode mode)
         {
             return file.FileSystem.FileStream.New(file.FullName, mode);
