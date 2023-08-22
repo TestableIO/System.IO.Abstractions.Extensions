@@ -264,5 +264,31 @@ namespace System.IO.Abstractions.Extensions.Tests
                 Assert.AreEqual(content[i], actual[i]);
             }
         }
+
+        [TestCase("line1", "line2", "line3")]
+        [TestCase("line1", "", "line3")]
+        public void AppendText_FileExistsAndHasText_LinesAreAppended(params string[] append)
+        {
+            //arrange
+            var initial = new[] { "test1", "test2", "test3" };
+            var fs = new FileSystem();
+            var current = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory());
+            var guid = Guid.NewGuid().ToString();
+            var file = current.File(guid);
+            file.WriteLines(initial);
+
+            //act
+            file.AppendLines(append);
+
+            //assert
+            var expected = initial.Concat(append).ToArray();
+            var actual = file.EnumerateLines().ToArray();
+
+            Assert.AreEqual(expected.Length, actual.Length);
+            for (int i = 0; i < expected.Length; i++)
+            {
+                Assert.AreEqual(expected[i], actual[i]);
+            }
+        }
     }
 }
