@@ -61,6 +61,15 @@ namespace System.IO.Abstractions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The file &apos;{0}&apos; already exists..
+        /// </summary>
+        internal static string CANNOT_OVERWRITE {
+            get {
+                return ResourceManager.GetString("CANNOT_OVERWRITE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find file &apos;{0}&apos;..
         /// </summary>
         internal static string COULD_NOT_FIND_FILE_EXCEPTION {
@@ -79,7 +88,7 @@ namespace System.IO.Abstractions {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; is not an ancestor of &apos;{1}&apos;.
+        ///   Looks up a localized string similar to &apos;{0}&apos; is not an ancestor of &apos;{1}&apos;..
         /// </summary>
         internal static string NOT_AN_ANCESTOR {
             get {
