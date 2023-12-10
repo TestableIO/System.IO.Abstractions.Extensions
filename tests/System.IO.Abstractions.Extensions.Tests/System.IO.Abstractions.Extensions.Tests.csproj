@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0;net6.0;net5.0</TargetFrameworks>
+		<TargetFrameworks>net8.0;net7.0;net6.0;net5.0</TargetFrameworks>
 		<TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net462</TargetFrameworks>
 		<IsPackable>false</IsPackable>
 		<IsTestable>true</IsTestable>
