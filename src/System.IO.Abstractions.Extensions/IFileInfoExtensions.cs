@@ -26,6 +26,18 @@ namespace System.IO.Abstractions
             return new LineEnumerable(file, null);
         }
 
+#if NET6_0_OR_GREATER
+        /// <summary>
+        /// Creates an <see cref="IEnumerable{String}"/> that can enumerate the lines of text in the <paramref name="file"/>
+        /// </summary>
+        /// <param name="file">File to enumerate content</param>
+        /// <returns>Returns an <see cref="IEnumerable{String}"/> to enumerate the content of the file</returns>
+        public static IAsyncEnumerable<string> EnumerateLinesAsync(this IFileInfo file)
+        {
+            return new AsyncLineEnumerable(file, null);
+        }
+#endif
+
         /// <summary>
         /// Creates an <see cref="IEnumerable{String}"/> that can enumerate the lines of text in the specified <paramref name="file"/>
         /// using the specified <paramref name="encoding"/>
