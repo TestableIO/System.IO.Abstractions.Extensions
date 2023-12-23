@@ -390,7 +390,7 @@ namespace System.IO.Abstractions.Extensions.Tests
         }
 
         [Test]
-        public void CopyTo_Overwrite_OverwritesWhenSet()
+        public void CopyTo_Overwrite_OverwritesWhenSet([Values] bool preExisting)
         {
             //arrange
             var fs = new FileSystem();
@@ -410,15 +410,25 @@ namespace System.IO.Abstractions.Extensions.Tests
             var sourceFileContent = new[] { nameof(sourceFile) };
             sourceFile.WriteLines(sourceFileContent);
             var destFileContent = new[] { nameof(destFile) };
-            destFile.WriteLines(destFileContent);
+            if (preExisting)
+            {
+                destFile.WriteLines(destFileContent);
+            }
 
             //make sure everything is set up as expected
             Assert.IsTrue(fs.Directory.Exists(source.FullName));
             Assert.IsTrue(fs.File.Exists(sourceFile.FullName));
             Assert.AreEqual(fs.File.ReadAllLines(sourceFile.FullName), sourceFileContent);
             Assert.IsTrue(fs.Directory.Exists(dest.FullName));
-            Assert.IsTrue(fs.File.Exists(destFile.FullName));
-            Assert.AreEqual(fs.File.ReadAllLines(destFile.FullName), destFileContent);
+            if (preExisting)
+            {
+                Assert.IsTrue(fs.File.Exists(destFile.FullName));
+                Assert.AreEqual(fs.File.ReadAllLines(destFile.FullName), destFileContent);
+            }
+            else
+            {
+                Assert.IsFalse(fs.File.Exists(destFile.FullName));
+            }
 
             //act
             source.CopyTo(dest, overwrite: true);
@@ -433,7 +443,7 @@ namespace System.IO.Abstractions.Extensions.Tests
         }
 
         [Test]
-        public void CopyTo_Overwrite_DoesNotOverwritesWhenNotSet()
+        public void CopyTo_Overwrite_DoesNotOverwriteSingleFileWhenNotSet()
         {
             //arrange
             var fs = new FileSystem();
@@ -468,6 +478,56 @@ namespace System.IO.Abstractions.Extensions.Tests
 
             //assert
             Assert.AreEqual(fs.File.ReadAllLines(destFile.FullName), destFileContent);
+
+            //cleanup
+            workingDir.Delete(recursive: true);
+
+            Assert.IsFalse(fs.File.Exists(workingDir.FullName));
+        }
+
+        [Test]
+        public void CopyTo_Overwrite_DoesNotOverwriteMultipleFilesWhenNotSet()
+        {
+            //arrange
+            var fs = new FileSystem();
+            var workingDir = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory()).CreateSubdirectory(Guid.NewGuid().ToString());
+
+            //create directories
+            var source = fs.DirectoryInfo.New(fs.Path.Combine(workingDir.FullName, "SourceDir"));
+            var dest = fs.DirectoryInfo.New(fs.Path.Combine(workingDir.FullName, "DestDir"));
+
+            source.Create();
+            dest.Create();
+
+            //create files
+            var sourceFile = fs.FileInfo.New(fs.Path.Combine(source.FullName, "file.txt"));
+            var secondSourceFile = fs.FileInfo.New(fs.Path.Combine(source.FullName, "another.txt")); // This will show up alphabetically first
+            var destFile = fs.FileInfo.New(fs.Path.Combine(dest.FullName, "file.txt"));
+            var secondDestFile = fs.FileInfo.New(fs.Path.Combine(dest.FullName, "another.txt"));
+
+            var sourceFileContent = new[] { nameof(sourceFile) };
+            sourceFile.WriteLines(sourceFileContent);
+            secondSourceFile.WriteLines(sourceFileContent);
+            var destFileContent = new[] { nameof(destFile) };
+            destFile.WriteLines(destFileContent);
+
+            //make sure everything is set up as expected
+            Assert.IsTrue(fs.Directory.Exists(source.FullName));
+            Assert.IsTrue(fs.File.Exists(sourceFile.FullName));
+            Assert.AreEqual(fs.File.ReadAllLines(sourceFile.FullName), sourceFileContent);
+            Assert.IsTrue(fs.File.Exists(secondSourceFile.FullName));
+            Assert.AreEqual(fs.File.ReadAllLines(secondSourceFile.FullName), sourceFileContent);
+            Assert.IsTrue(fs.Directory.Exists(dest.FullName));
+            Assert.IsTrue(fs.File.Exists(destFile.FullName));
+            Assert.AreEqual(fs.File.ReadAllLines(destFile.FullName), destFileContent);
+            Assert.IsFalse(fs.File.Exists(secondDestFile.FullName));
+
+            //act
+            Assert.That(() => source.CopyTo(dest, overwrite: false), Throws.Exception.TypeOf<IOException>().And.Message.Contains(destFile.FullName));
+
+            //assert
+            Assert.AreEqual(fs.File.ReadAllLines(destFile.FullName), destFileContent);
+            Assert.IsFalse(fs.File.Exists(secondDestFile.FullName));
 
             //cleanup
             workingDir.Delete(recursive: true);

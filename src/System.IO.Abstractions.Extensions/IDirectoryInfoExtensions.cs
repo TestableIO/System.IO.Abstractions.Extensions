@@ -211,6 +211,22 @@ namespace System.IO.Abstractions
             string filesSearchPattern = "*",
             string directoriesSearchPattern = "*")
         {
+            if (!overwrite)
+            {
+                source.ForEachFile(
+                    (file, destDir) => {
+                        var destPath = destDir.GetFilePath(file.Name);
+                        if (destination.FileSystem.File.Exists(destPath))
+                        {
+                            throw new IOException(StringResources.Format("CANNOT_OVERWRITE", destPath));
+                        }
+                    },
+                    subDirectory => source.TranslatePaths(subDirectory, destination, true),
+                    recursive,
+                    filesSearchPattern,
+                    directoriesSearchPattern);
+            }
+
             source.ForEachFile(
                 (file, destDir) => file.CopyTo(destDir.GetFilePath(file.Name), overwrite),
                 subDirectory => source.TranslatePaths(subDirectory, destination, true),
