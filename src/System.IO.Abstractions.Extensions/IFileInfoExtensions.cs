@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace System.IO.Abstractions
 {
@@ -116,6 +118,32 @@ namespace System.IO.Abstractions
             }
         }
 
+        /// <inheritdoc cref="System.IO.File.ReadAllText(string)" />
+        public static string ReadAllText(this IFileInfo file)
+        {
+            return file.FileSystem.File.ReadAllText(file.FullName);
+        }
+
+        /// <inheritdoc cref="System.IO.File.ReadAllText(string, Encoding)" />
+        public static string ReadAllText(this IFileInfo file, Encoding encoding)
+        {
+            return file.FileSystem.File.ReadAllText(file.FullName, encoding);
+        }
+
+#if FEATURE_ASYNC_FILE
+        /// <inheritdoc cref="System.IO.File.ReadAllTextAsync(string, CancellationToken)" />
+        public static async Task<string> ReadAllTextAsync(this IFileInfo file, CancellationToken cancellationToken = default)
+        {
+            return await file.FileSystem.File.ReadAllTextAsync(file.FullName, cancellationToken);
+        }
+
+        /// <inheritdoc cref="System.IO.File.ReadAllTextAsync(string, Encoding, CancellationToken)" />
+        public static async Task<string> ReadAllTextAsync(this IFileInfo file, Encoding encoding, CancellationToken cancellationToken = default)
+        {
+            return await file.FileSystem.File.ReadAllTextAsync(file.FullName, encoding, cancellationToken);
+        }
+#endif
+        
         private static FileMode GetWriteFileMode(IFileInfo info, bool overwrite)
         {
             if (!overwrite && info.Exists)
