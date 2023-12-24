@@ -207,9 +207,9 @@ namespace System.IO.Abstractions
             this IDirectoryInfo source,
             IDirectoryInfo destination,
             bool recursive = false,
-            bool overwrite = false,
             string filesSearchPattern = "*",
-            string directoriesSearchPattern = "*")
+            string directoriesSearchPattern = "*",
+            bool overwrite = false)
         {
             if (!overwrite)
             {
