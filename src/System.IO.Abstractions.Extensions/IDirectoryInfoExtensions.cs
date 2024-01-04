@@ -199,7 +199,8 @@ namespace System.IO.Abstractions
         /// </summary>
         /// <param name="source">Source directory</param>
         /// <param name="destination">Destination directory</param>
-        /// <param name="recursive">If true the copy will be recursive and will include subfolders of <paramref name="info"/>. Defaults to false</param>
+        /// <param name="recursive">If true the copy will be recursive and will include subfolders of <paramref name="source"/>. Defaults to false</param>
+        /// <param name="overwrite">If true the copy will overwrite any existing files in <paramref name="destination"/>. Defaults to false</param>
         /// <param name="filesSearchPattern">Search pattern to apply when searching files, defaults to '*'</param>
         /// <param name="directoriesSearchPattern">Search pattern to apply when searching directories, defaults to '*'</param>
         public static void CopyTo(
@@ -207,10 +208,11 @@ namespace System.IO.Abstractions
             IDirectoryInfo destination,
             bool recursive = false,
             string filesSearchPattern = "*",
-            string directoriesSearchPattern = "*")
+            string directoriesSearchPattern = "*",
+            bool overwrite = false)
         {
             source.ForEachFile(
-                (file, destDir) => file.CopyTo(destDir.GetFilePath(file.Name)),
+                (file, destDir) => file.CopyTo(destDir.GetFilePath(file.Name), overwrite),
                 subDirectory => source.TranslatePaths(subDirectory, destination, true),
                 recursive,
                 filesSearchPattern,
