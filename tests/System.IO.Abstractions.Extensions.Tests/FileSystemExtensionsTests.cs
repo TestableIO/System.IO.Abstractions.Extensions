@@ -89,11 +89,11 @@ namespace System.IO.Abstractions.Extensions.Tests
         {
             // Arrange
             var fs = new FileSystem();
-            var path = fs.Path.Combine(fs.Path.GetTempPath(), fs.Path.GetRandomFileName());
+            string path = null;
 
             // Act
             CustomDisposableDirectory customDisposable;
-            using (customDisposable = fs.CreateDisposableDirectory(path, dir => new CustomDisposableDirectory(dir), out var dirInfo))
+            using (customDisposable = fs.CreateDisposableDirectory(dir => new CustomDisposableDirectory(dir), out var dirInfo))
             {
                 path = dirInfo.FullName;
 
@@ -102,6 +102,7 @@ namespace System.IO.Abstractions.Extensions.Tests
             }
 
             // Assert directory is deleted
+            Assert.IsNotNull(path);
             Assert.IsFalse(fs.Directory.Exists(path), "Directory should not exist");
             Assert.IsTrue(customDisposable.DeleteFileSystemInfoWasCalled, "Custom disposable delete should have been called");
         }
@@ -150,11 +151,11 @@ namespace System.IO.Abstractions.Extensions.Tests
         {
             // Arrange
             var fs = new FileSystem();
-            var path = fs.Path.Combine(fs.Path.GetTempPath(), fs.Path.GetRandomFileName());
+            string path = null;
 
             // Act
             CustomDisposableFile customDisposable;
-            using (customDisposable = fs.CreateDisposableFile(path, dir => new CustomDisposableFile(dir), out var fileInfo))
+            using (customDisposable = fs.CreateDisposableFile(dir => new CustomDisposableFile(dir), out var fileInfo))
             {
                 path = fileInfo.FullName;
 
@@ -163,6 +164,7 @@ namespace System.IO.Abstractions.Extensions.Tests
             }
 
             // Assert file is deleted
+            Assert.IsNotNull(path);
             Assert.IsFalse(fs.File.Exists(path), "File should not exist");
             Assert.IsTrue(customDisposable.DeleteFileSystemInfoWasCalled, "Custom disposable delete should have been called");
         }
