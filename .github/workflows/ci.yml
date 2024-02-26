@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup .NET
@@ -30,7 +30,7 @@ jobs:
       - name: Run tests
         run: dotnet test --collect:"XPlat Code Coverage"  --logger "GitHubActions"
       - name: Upload coverage
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Code coverage ${{ matrix.os }}
           path: "**/coverage.cobertura.xml"
@@ -40,23 +40,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: Code coverage ubuntu-latest
           path: coverage-ubuntu
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: Code coverage windows-latest
           path: coverage-windows
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: Code coverage macos-latest
           path: coverage-macos
       - name: Generate coverage report
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.1.19
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.2.2
         with:
           reports: "**/coverage.cobertura.xml"
           targetdir: "coverage-report"
@@ -73,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup .NET
@@ -81,7 +81,7 @@ jobs:
       - name: Create packages
         run: dotnet pack --configuration Release --output ./packages
       - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: NuGet packages
           path: packages/*.*
@@ -92,18 +92,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: NuGet packages
           path: packages
       - name: Push packages
         run: dotnet nuget push "packages/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
-      - uses: dotnet/nbgv@v0.4.0
+      - uses: dotnet/nbgv@v0.4.2
         id: nbgv
       - name: Create GitHub release
         uses: actions/create-release@v1
@@ -113,7 +113,7 @@ jobs:
           tag_name: v${{ steps.nbgv.outputs.SemVer2 }}
           release_name: v${{ steps.nbgv.outputs.SemVer2 }}
       - name: Comment relevant issues and merge requests
-        uses: apexskier/github-release-commenter@v1.3.2
+        uses: apexskier/github-release-commenter@v1.3.6
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           comment-template: |
