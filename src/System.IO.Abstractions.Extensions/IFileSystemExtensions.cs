@@ -55,6 +55,23 @@ namespace System.IO.Abstractions
             return fileSystem.CreateDisposableDirectory(path, dir => new DisposableDirectory(dir), out directoryInfo);
         }
 
+        /// <inheritdoc cref="CreateDisposableDirectory(IFileSystem, out IDirectoryInfo)"/>
+        /// <summary>
+        /// Creates a new <see cref="IDirectoryInfo"/> using a random name from the temp path and returns an
+        /// <see cref="IDisposable"/> created by <paramref name="disposableFactory"/>, that should delete the directory when disposed.
+        /// </summary>
+        /// <param name="disposableFactory">
+        /// A <see cref="Func{T, TResult}"/> that acts as a factory method. Given the <see cref="IDirectoryInfo"/>, create the
+        /// <see cref="IDisposable"/> that will manage the its lifetime.
+        /// </param>
+        public static T CreateDisposableDirectory<T>(
+            this IFileSystem fileSystem,
+            Func<IDirectoryInfo, T> disposableFactory,
+            out IDirectoryInfo directoryInfo) where T : IDisposable
+        {
+            return fileSystem.CreateDisposableDirectory(fileSystem.Path.GetRandomTempPath(), disposableFactory, out directoryInfo);
+        }
+
         /// <inheritdoc cref="CreateDisposableDirectory(IFileSystem, string, out IDirectoryInfo)"/>
         /// <summary>
         /// Creates a new <see cref="IDirectoryInfo"/> using a path provided by <paramref name="path"/>, and returns an
@@ -114,6 +131,23 @@ namespace System.IO.Abstractions
         public static IDisposable CreateDisposableFile(this IFileSystem fileSystem, string path, out IFileInfo fileInfo)
         {
             return fileSystem.CreateDisposableFile(path, file => new DisposableFile(file), out fileInfo);
+        }
+
+        /// <inheritdoc cref="CreateDisposableFile(IFileSystem, out IFileInfo)"/>
+        /// <summary>
+        /// Creates a new <see cref="IFileInfo"/> using a random name from the temp path and returns an
+        /// <see cref="IDisposable"/> created by <paramref name="disposableFactory"/>, that should delete the file when disposed.
+        /// </summary>
+        /// <param name="disposableFactory">
+        /// A <see cref="Func{T, TResult}"/> that acts as a factory method. Given the <see cref="IFileInfo"/>, create the
+        /// <see cref="IDisposable"/> that will manage the its lifetime.
+        /// </param>
+        public static T CreateDisposableFile<T>(
+            this IFileSystem fileSystem,
+            Func<IFileInfo, T> disposableFactory,
+            out IFileInfo fileInfo) where T : IDisposable
+        {
+            return fileSystem.CreateDisposableFile(fileSystem.Path.GetRandomTempPath(), disposableFactory, out fileInfo);
         }
 
         /// <inheritdoc cref="CreateDisposableFile(IFileSystem, string, out IFileInfo)"/>
