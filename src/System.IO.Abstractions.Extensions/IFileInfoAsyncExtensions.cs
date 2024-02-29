@@ -1,6 +1,9 @@
 ﻿#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+#nullable enable
 
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,7 +18,7 @@ namespace System.IO.Abstractions
         }
         
         /// <inheritdoc cref="IFile.AppendAllTextAsync(string,string?,System.Threading.CancellationToken)"/>
-        public static async Task AppendAllTextAsync(this IFileInfo file, string contents, CancellationToken cancellationToken = default)
+        public static async Task AppendAllTextAsync(this IFileInfo file, string? contents, CancellationToken cancellationToken = default)
         {
             await file.FileSystem.File.AppendAllTextAsync(file.FullName, contents, cancellationToken);
         }
@@ -54,6 +57,41 @@ namespace System.IO.Abstractions
         public static async Task WriteAllTextAsync(this IFileInfo file, string contents, CancellationToken cancellationToken = default)
         {
             await file.FileSystem.File.WriteAllTextAsync(file.FullName, contents, cancellationToken);
+        }
+
+        /// <summary>
+        /// Creates an <see cref="IAsyncEnumerable{String}"/> that can enumerate asynchronously the lines of text in the specified <paramref name="file"/>
+        /// </summary>
+        /// <param name="file">File to enumerate content</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns an <see cref="IAsyncEnumerable{String}"/> to enumerate the content of the file</returns>
+        public static IAsyncEnumerable<string> EnumerateLinesAsync(this IFileInfo file, CancellationToken cancellationToken)
+        {
+            return EnumerateLinesAsync(file, null, cancellationToken);
+        }
+
+        /// <summary>
+        /// Creates an <see cref="IAsyncEnumerable{String}"/> that can enumerate asynchronously the lines of text in the specified <paramref name="file"/>
+        /// using the specified <paramref name="encoding"/>
+        /// </summary>
+        /// <param name="file">File to enumerate content</param>
+        /// <param name="encoding">Encoding to use to read the file</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns an <see cref="IAsyncEnumerable{String}"/> to enumerate the content of the file</returns>
+        public static async IAsyncEnumerable<string> EnumerateLinesAsync(this IFileInfo file, Encoding? encoding, [EnumeratorCancellation] CancellationToken cancellationToken)
+        {
+            await using var stream = file.OpenRead();
+            using var reader = encoding == null
+                ? new StreamReader(stream)
+                : new StreamReader(stream, encoding);
+
+            var line = await reader.ReadLineAsync();
+            while (line != null)
+            {
+                yield return line;
+                cancellationToken.ThrowIfCancellationRequested();                
+                line = await reader.ReadLineAsync();
+            }
         }
     }
 }
