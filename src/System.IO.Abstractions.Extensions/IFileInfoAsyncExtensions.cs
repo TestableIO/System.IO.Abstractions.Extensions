@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-
-#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
 
 namespace System.IO.Abstractions
 {
