@@ -54,7 +54,7 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc cref="IFile.WriteAllTextAsync(string,string?,System.Threading.CancellationToken)" />
-        public static async Task WriteAllTextAsync(this IFileInfo file, string contents, CancellationToken cancellationToken = default)
+        public static async Task WriteAllTextAsync(this IFileInfo file, string? contents, CancellationToken cancellationToken = default)
         {
             await file.FileSystem.File.WriteAllTextAsync(file.FullName, contents, cancellationToken);
         }
