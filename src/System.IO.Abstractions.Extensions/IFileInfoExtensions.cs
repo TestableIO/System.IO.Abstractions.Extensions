@@ -31,6 +31,7 @@ namespace System.IO.Abstractions
         /// using the specified <paramref name="encoding"/>
         /// </summary>
         /// <param name="file">File to enumerate content</param>
+        /// <param name="encoding">Encoding to use to read the file</param>
         /// <returns>Returns an <see cref="IEnumerable{String}"/> to enumerate the content of the file</returns>
         public static IEnumerable<string> EnumerateLines(this IFileInfo file, Encoding encoding)
         {
