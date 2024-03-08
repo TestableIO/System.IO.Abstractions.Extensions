@@ -117,6 +117,54 @@ namespace System.IO.Abstractions
             }
         }
 
+        /// <inheritdoc cref="IFile.AppendAllLines(string, IEnumerable{string})"/>
+        public static void AppendAllLines(this IFileInfo file, IEnumerable<string> contents)
+        {
+            file.FileSystem.File.AppendAllLines(file.FullName, contents);
+        }
+
+        /// <inheritdoc cref="IFile.AppendAllText(string, string)"/>
+        public static void AppendAllText(this IFileInfo file, string contents)
+        {
+            file.FileSystem.File.AppendAllText(file.FullName, contents);
+        }
+
+        /// <inheritdoc cref="IFile.ReadAllBytes(string)"/>
+        public static byte[] ReadAllBytes(this IFileInfo file)
+        {
+            return file.FileSystem.File.ReadAllBytes(file.FullName);
+        }
+
+        /// <inheritdoc cref="IFile.ReadAllLines(string)"/>
+        public static string[] ReadAllLines(this IFileInfo file)
+        {
+            return file.FileSystem.File.ReadAllLines(file.FullName);
+        }
+
+        /// <inheritdoc cref="IFile.ReadAllText(string)"/>
+        public static string ReadAllText(this IFileInfo file)
+        {
+            return file.FileSystem.File.ReadAllText(file.FullName);
+        }
+
+        /// <inheritdoc cref="IFile.WriteAllBytes(string, byte[])"/>
+        public static void WriteAllBytes(this IFileInfo file, byte[] bytes)
+        {
+            file.FileSystem.File.WriteAllBytes(file.FullName, bytes);
+        }
+
+        /// <inheritdoc cref="IFile.WriteAllLines(string, IEnumerable{string})"/>
+        public static void WriteAllLines(this IFileInfo file, IEnumerable<string> contents)
+        {
+            file.FileSystem.File.WriteAllLines(file.FullName, contents);
+        }
+
+        /// <inheritdoc cref="IFile.WriteAllText(string, string)"/>
+        public static void WriteAllText(this IFileInfo file, string contents)
+        {
+            file.FileSystem.File.WriteAllText(file.FullName, contents);
+        }
+
         private static FileMode GetWriteFileMode(IFileInfo info, bool overwrite)
         {
             if (!overwrite && info.Exists)
