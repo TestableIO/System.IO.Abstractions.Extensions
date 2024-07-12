@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+
+using System.Collections.Generic;
 using System.Text;
 
 namespace System.IO.Abstractions
@@ -163,6 +165,18 @@ namespace System.IO.Abstractions
         public static void WriteAllText(this IFileInfo file, string contents)
         {
             file.FileSystem.File.WriteAllText(file.FullName, contents);
+        }
+
+        /// <inheritdoc cref="IPath.GetFileNameWithoutExtension(string?)"/>
+        public static string GetFileNameWithoutExtension(this IFileInfo file)
+        {
+            return file.FileSystem.Path.GetFileNameWithoutExtension(file.FullName);
+        }
+
+        /// <inheritdoc cref="IPath.ChangeExtension(string?, string?)"/>
+        public static void ChangeExtension(this IFileInfo file, string? extension)
+        {
+            file.FileSystem.Path.ChangeExtension(file.FullName, extension);
         }
 
         private static FileMode GetWriteFileMode(IFileInfo info, bool overwrite)
