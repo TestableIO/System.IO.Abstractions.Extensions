@@ -7,7 +7,12 @@
 		<RootNamespace>System.IO.Abstractions</RootNamespace>
 		<PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../../ReleaseNotes.md"))</PackageReleaseNotes>
 		<LangVersion>9.0</LangVersion>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="$(MSBuildThisFileDirectory)../../README.md" Pack="true" PackagePath="\"/>
+	</ItemGroup>
 
 	<ItemGroup>
 	  <!-- Dependencies of TestableIO.System.IO.Abstractions changed in 22.0 -->
