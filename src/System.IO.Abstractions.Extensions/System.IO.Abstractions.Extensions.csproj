@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<PackageId>TestableIO.System.IO.Abstractions.Extensions</PackageId>
-		<TargetFrameworks>net8.0;netstandard2.1;netstandard2.0;net462</TargetFrameworks>
+		<TargetFrameworks>net8.0;netstandard2.1;netstandard2.0;net472</TargetFrameworks>
 		<Description>Convenience functionalities on top of System.IO.Abstractions</Description>
 		<RootNamespace>System.IO.Abstractions</RootNamespace>
 		<PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../../ReleaseNotes.md"))</PackageReleaseNotes>
