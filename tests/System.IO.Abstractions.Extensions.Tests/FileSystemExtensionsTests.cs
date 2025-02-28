@@ -120,14 +120,14 @@ namespace System.IO.Abstractions.Extensions.Tests
             {
                 path = file.FullName;
 
-                Assert.IsTrue(file.Exists, "File should exist");
+                Assert.That(file.Exists, Is.True, "File should exist");
                 Assert.IsTrue(
                     path.StartsWith(fs.Path.GetTempPath(), StringComparison.Ordinal),
                     "File should be in temp path");
             }
 
             // Assert file is deleted
-            Assert.IsFalse(fs.File.Exists(path), "File should not exist");
+            Assert.That(fs.File.Exists(path), Is.False, "File should not exist");
         }
 
         [Test]
