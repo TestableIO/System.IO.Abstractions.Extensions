@@ -1,4 +1,4 @@
-﻿#if NETSTANDARD2_1_OR_GREATER || NET8_0_OR_GREATER
+﻿#if NET8_0_OR_GREATER
 #nullable enable
 
 using System.Collections.Generic;
