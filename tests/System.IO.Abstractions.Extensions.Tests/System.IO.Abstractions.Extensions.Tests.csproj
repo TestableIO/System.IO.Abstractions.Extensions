@@ -8,6 +8,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Using Include="NUnit.Framework.Legacy.ClassicAssert" Alias="Assert" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\System.IO.Abstractions.Extensions\System.IO.Abstractions.Extensions.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
 		<PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="22.0.10" />
 		<PackageReference Include="NUnit" Version="4.3.2" />
     	<PackageReference Include="NUnit.Analyzers" Version="4.3.0" />
@@ -16,7 +24,6 @@
 		<PackageReference Include="coverlet.collector" Version="6.0.4" />
 		<PackageReference Include="GitHubActionsTestLogger" Version="2.4.1" />
 		<PackageReference Include="Snapshooter.NUnit" Version="1.0.1" />
-		<ProjectReference Include="..\..\src\System.IO.Abstractions.Extensions\System.IO.Abstractions.Extensions.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -1,3 +1,0 @@
-[*.cs]
-
-dotnet_diagnostic.NUnit2003.severity = warning

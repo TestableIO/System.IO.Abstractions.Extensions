@@ -6,6 +6,7 @@
 		<Description>Convenience functionalities on top of System.IO.Abstractions</Description>
 		<RootNamespace>System.IO.Abstractions</RootNamespace>
 		<PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../../ReleaseNotes.md"))</PackageReleaseNotes>
+		<LangVersion>9.0</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
