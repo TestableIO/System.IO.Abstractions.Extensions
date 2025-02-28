@@ -9,7 +9,7 @@ namespace System.IO.Abstractions.Extensions.Tests
         [Test]
         public void DisposableDirectory_Throws_ArgumentNullException_For_Null_IDirectoryInfo_Test()
         {
-            Assert.Throws<ArgumentNullException>(() => new DisposableDirectory(null!));
+            Assert.Throws<ArgumentNullException>(() => new DisposableDirectory(null));
         }
 
         [Test]
