@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System.Linq;
 using System.Text;
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
 
 namespace System.IO.Abstractions.Extensions.Tests
 {

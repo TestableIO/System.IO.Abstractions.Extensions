@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
 
 namespace System.IO.Abstractions.Extensions.Tests
 {

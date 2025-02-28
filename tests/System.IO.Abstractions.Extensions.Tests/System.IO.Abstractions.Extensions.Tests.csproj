@@ -2,14 +2,10 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net9.0;net8.0</TargetFrameworks>
-		<TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net462</TargetFrameworks>
+		<TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net472</TargetFrameworks>
 		<IsPackable>false</IsPackable>
 		<IsTestable>true</IsTestable>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<Using Include="NUnit.Framework.Legacy.ClassicAssert" Alias="Assert" />
-	</ItemGroup>
 	
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\System.IO.Abstractions.Extensions\System.IO.Abstractions.Extensions.csproj" />

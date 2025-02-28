@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
 
 namespace System.IO.Abstractions.Extensions.Tests
 {
@@ -42,7 +43,7 @@ namespace System.IO.Abstractions.Extensions.Tests
             var fullName = fs.CurrentDirectory().FullName;
 
             Assert.IsFalse(String.IsNullOrWhiteSpace(fullName));
-            Assert.AreEqual(Environment.CurrentDirectory, fullName);
+            NUnit.Framework.Assert.That(fullName, Is.EqualTo(Environment.CurrentDirectory));
         }
 
         [Test]
