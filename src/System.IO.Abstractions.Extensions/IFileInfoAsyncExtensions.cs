@@ -1,4 +1,4 @@
-﻿#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+﻿#if NET8_0_OR_GREATER
 #nullable enable
 
 using System.Collections.Generic;
@@ -85,12 +85,12 @@ namespace System.IO.Abstractions
                 ? new StreamReader(stream)
                 : new StreamReader(stream, encoding);
 
-            var line = await reader.ReadLineAsync();
+            var line = await reader.ReadLineAsync(cancellationToken);
             while (line != null)
             {
                 yield return line;
                 cancellationToken.ThrowIfCancellationRequested();                
-                line = await reader.ReadLineAsync();
+                line = await reader.ReadLineAsync(cancellationToken);
             }
         }
     }

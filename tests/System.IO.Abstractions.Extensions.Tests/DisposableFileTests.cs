@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
 
 namespace System.IO.Abstractions.Extensions.Tests
 {
@@ -8,7 +9,7 @@ namespace System.IO.Abstractions.Extensions.Tests
         [Test]
         public void DisposableFile_Throws_ArgumentNullException_For_Null_IFileInfo_Test()
         {
-            Assert.Throws<ArgumentNullException>(() => new DisposableFile(null!));
+            Assert.Throws<ArgumentNullException>(() => new DisposableFile(null));
         }
 
         [Test]
