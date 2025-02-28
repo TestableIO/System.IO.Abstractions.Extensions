@@ -9,6 +9,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <!-- Dependencies of TestableIO.System.IO.Abstractions changed in 22.0 -->
+	  <PackageReference Include="TestableIO.System.IO.Abstractions" Version="[17.*,22.0.0)" />
+	</ItemGroup>
+	
+	<ItemGroup>
 	  <Compile Update="Resources.Designer.cs">
 	    <DesignTime>True</DesignTime>
 	    <AutoGen>True</AutoGen>
