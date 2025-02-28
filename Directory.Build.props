@@ -18,7 +18,8 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="TestableIO.System.IO.Abstractions" Version="17.*" />
+    <!-- Dependencies of TestableIO.System.IO.Abstractions changed in 22.0 -->
+    <PackageReference Include="TestableIO.System.IO.Abstractions" Version="[17.*,22.0.0)" />
     <PackageReference Include="Nerdbank.GitVersioning" Version="3.6.133">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
