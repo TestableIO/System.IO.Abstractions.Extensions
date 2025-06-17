@@ -12,14 +12,14 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="22.0.11" />
+		<PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="22.0.14" />
 		<PackageReference Include="NUnit" Version="4.3.2" />
-		<PackageReference Include="NUnit.Analyzers" Version="4.6.0">
+		<PackageReference Include="NUnit.Analyzers" Version="4.9.2">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
 		<PackageReference Include="coverlet.collector" Version="6.0.4" />
 		<PackageReference Include="GitHubActionsTestLogger" Version="2.4.1" />
 		<PackageReference Include="Snapshooter.NUnit" Version="1.0.1" />
