@@ -294,6 +294,7 @@ namespace System.IO.Abstractions.Extensions.Tests
         [TestCase("test.extension", "test")]
         [TestCase("noextension", "noextension")]
         [TestCase(".extensiononly", "")]
+        [TestCase("double.dot.ext", "double.dot")]
         public void GetFileNameWithoutExtension_WithValidFileName_ReturnsNameWithoutExtension(string fileName, string expectedName)
         {
             //arrange
