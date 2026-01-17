@@ -291,5 +291,23 @@ namespace System.IO.Abstractions.Extensions.Tests
                 Assert.AreEqual(expected[i], actual[i]);
             }
         }
+
+        [TestCase("test.extension", "test")]
+        [TestCase("noextension", "noextension")]
+        [TestCase(".extensiononly", "")]
+        [TestCase("double.dot.ext", "double.dot")]
+        public void GetFileNameWithoutExtension_WithValidFileName_ReturnsNameWithoutExtension(string fileName, string expectedName)
+        {
+            //arrange
+            var fs = new FileSystem();
+            var current = fs.DirectoryInfo.New(fs.Directory.GetCurrentDirectory());
+            var file = current.File(fileName);
+
+            //act
+            var name = file.GetFileNameWithoutExtension();
+
+            //assert
+            Assert.AreEqual(expectedName, name);
+        }
     }
 }
